@@ -1,4 +1,4 @@
-within Buildings.DistrictEnergySystem.Buildings;
+within Buildings.DistrictEnergySystem.Loads;
 package Examples "Collection of models that illustrate model use and test models"
   extends Modelica.Icons.ExamplesPackage;
 
