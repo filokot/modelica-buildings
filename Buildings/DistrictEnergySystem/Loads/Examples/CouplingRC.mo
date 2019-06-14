@@ -1,6 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
-model CouplingRC
-  "Example illustrating the coupling of a RC building model and a ETS model"
+model CouplingRC "Example illustrating the coupling of a RC building model to a fluid loop"
   import Buildings;
   extends Modelica.Icons.Example;
   package Medium = Buildings.Media.Water "Fluid in the pipes";
@@ -103,7 +102,6 @@ equation
     annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
   annotation (Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-120,-120},{120,80}})),
-    __Dymola_Commands(file=
-          "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
+    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
         "Simulate and plot"));
 end CouplingRC;

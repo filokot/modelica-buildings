@@ -1,6 +1,6 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
 model CouplingTimeSeries_LMTD
-  "Example illustrating the coupling of a time series building model and a ETS model"
+  "Example illustrating the coupling of a time series building model to a fluid loop"
   import Buildings;
   extends Modelica.Icons.Example;
   package Medium = Buildings.Media.Water "Fluid in the pipes";

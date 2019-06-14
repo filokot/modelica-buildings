@@ -1,6 +1,6 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
 model CouplingTimeSeries
-  "Example illustrating the coupling of a time series building model and a ETS model"
+  "Example illustrating the coupling of a time series building model to a fluid loop"
   import Buildings;
   extends Modelica.Icons.Example;
   package Medium = Buildings.Media.Water "Fluid in the pipes";
@@ -105,6 +105,5 @@ equation
         coordinateSystem(preserveAspectRatio=false, extent={{-140,-120},{120,80}})),
     __Dymola_Commands(file=
           "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingTimeSeries.mos"
-        "Simulate and plot"),
-    Icon(coordinateSystem(extent={{-140,-120},{120,80}})));
+        "Simulate and plot"));
 end CouplingTimeSeries;

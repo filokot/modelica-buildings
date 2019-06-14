@@ -1,5 +1,6 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
 model HeatingOrCooling_LMTD
+  "Model for static heat transfer between a circulating fluid and a thermal load"
   extends Buildings.Fluid.Interfaces.LumpedVolumeDeclarations;
   extends Buildings.Fluid.Interfaces.TwoPortFlowResistanceParameters(dp_nominal=0);
   extends Buildings.Fluid.Interfaces.PartialTwoPortInterface(
@@ -137,7 +138,28 @@ equation
           10},{52,48},{60,48}},      color={191,0,0}));
   connect(heaFloUA.port_b, heaPorLoa) annotation (Line(points={{80,48},{92,48},{
           92,100},{0,100}}, color={191,0,0}));
-  annotation (Icon(coordinateSystem(
+  annotation (defaultComponentName="heaOrCoo",
+ Documentation(info="<html>
+ <p>
+ The heat flow rate between the fluid and the load is computed based on an 
+ exponential relationship to a representative temperature difference cf.   
+ <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowUA_LMTD\">
+ Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowUA_LMTD</a>. Using the logarithmic 
+ mean temperature difference, <code>dTLog = (TFluid_a - TFluid_b) / ln((TFluid_a - TLoad) / 
+ (TFluid_b - TLoad))</code> results from integrating the local equation of the heat flow rate
+ equation over the all surface where the heat transfer occurs.
+ </p>
+ <p>
+ The nominal UA-value (W/K) is calculated consistently from the given nominal cooling or 
+ heating power, nominal fluid and load temperatures and the 
+ exponent for heat transfer. The actual UA-value is equal to the nominal value 
+ when there is a cooling or heating demand. It is equal to zero otherwise to prevent concomitant 
+ cooling and heating when two instances of this class are connected to the same load model. The 
+ model uses a smoothing function between those two conditions so that the actual 
+ UA-value is continuously differentiable.
+ </p>
+ </html>"),
+  Icon(coordinateSystem(
         preserveAspectRatio=true,
         extent={{-100,-100},{100,100}},
         grid={1,1}), graphics={

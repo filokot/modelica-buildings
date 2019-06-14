@@ -96,13 +96,16 @@ equation
  The heat flow rate between the fluid and the load is computed based on an 
  exponential relationship to a representative temperature difference cf.   
  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowUA\">
- Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowUA</a>.  
+ Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowUA</a>. Using the temperature of the mixing 
+ volume (outlet temperature) ensures that the Second Law is respected i.e. that the fluid 
+ temperature cannot cross the temperature of the load.
  </p>
  <p>
- The nominal UA-value (W/K) is calculated from the given nominal cooling or 
+ The nominal UA-value (W/K) is calculated consistently from the given nominal cooling or 
  heating power, nominal fluid and load temperatures and the 
  exponent for heat transfer. The actual UA-value is equal to the nominal value 
- when there is a cooling or heating demand. It is equal to zero otherwise. The 
+ when there is a cooling or heating demand. It is equal to zero otherwise to prevent concomitant 
+ cooling and heating when two instances of this class are connected to the same load model. The 
  model uses a smoothing function between those two conditions so that the actual 
  UA-value is continuously differentiable.
  </p>
