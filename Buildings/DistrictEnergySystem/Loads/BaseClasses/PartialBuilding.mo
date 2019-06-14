@@ -14,11 +14,11 @@ partial model PartialBuilding "Partial class for building model"
             -16,84},{18,116}})));
 
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heaPorCoo
-    "Heat port to connect cooling source to the load"           annotation (
+    "Heat port for heat transfer with the cooling source"       annotation (
       Placement(transformation(extent={{-310,-110},{-290,-90}}),
         iconTransformation(extent={{-110,-80},{-90,-60}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heaPorHea
-    "Heat port to connect heating source to the load"           annotation (
+    "Heat port for heat transfer with the heating source"       annotation (
       Placement(transformation(extent={{-310,90},{-290,110}}),
         iconTransformation(extent={{-110,60},{-90,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yCoo(

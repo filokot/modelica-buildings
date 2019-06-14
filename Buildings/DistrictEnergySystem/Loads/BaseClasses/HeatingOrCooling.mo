@@ -3,7 +3,6 @@ model HeatingOrCooling
   "Model for static heat transfer between a circulating fluid and a thermal load"
   extends Buildings.Fluid.Interfaces.TwoPortHeatMassExchanger(
     redeclare final Buildings.Fluid.MixingVolumes.MixingVolume vol,
-    T_start=TLoa_nominal,
     show_T=false,
     m_flow_nominal=abs(Q_flow_nominal/cp_nominal/(T_a_nominal - T_b_nominal)),
     dp_nominal=0);

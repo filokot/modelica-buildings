@@ -1,8 +1,8 @@
 removePlots(true);
-simulateModel("Buildings.DistrictEnergySystem.Loads.Examples.CouplingRCOneElement",
+simulateModel("Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC",
     method="cvode", tolerance=1e-6, numberOfIntervals=5000,
     stopTime=800000.0,
-    resultFile="CouplingRCOneElement");
+    resultFile="CouplingRC");
 createPlot(
     id=1,
     position={10, 20, 670, 900},
@@ -51,7 +51,7 @@ createPlot(
     grid=true,
     subPlot=3
 );
-plotExpression(apply(-1*CouplingRCOneElement[end].couHea.Q_flow_nominal), false, "-1*couHea.Q_flow_nominal", 2);
+plotExpression(apply(-1*CouplingRC[end].couHea.Q_flow_nominal), false, "-1*couHea.Q_flow_nominal", 2);
 createPlot(
     id=2,
     y={"bui.yHea", "couHea.frac_Q_flow"},

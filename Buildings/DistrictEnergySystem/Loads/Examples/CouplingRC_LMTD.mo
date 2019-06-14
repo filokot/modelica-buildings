@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
-model CouplingRCOneElement
+model CouplingRC_LMTD
   "Example illustrating the coupling of a RC building model and a ETS model"
   import Buildings;
   extends Modelica.Icons.Example;
@@ -51,7 +51,8 @@ model CouplingRCOneElement
         extent={{-10,-10},{10,10}},
         rotation=0,
         origin={-44,-90})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couHea(
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling_LMTD
+                                                                    couHea(
     Q_flow_nominal=bui.Q_flowHea_nominal,
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -59,7 +60,8 @@ model CouplingRCOneElement
     T_b_nominal=313.15,
     TLoa_nominal=293.15)
     annotation (Placement(transformation(extent={{-20,40},{0,20}})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couCoo(
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling_LMTD
+                                                                    couCoo(
     Q_flow_nominal=bui.Q_flowCoo_nominal,
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -97,13 +99,13 @@ equation
           {-104,0},{-104,38},{-92,38}},      color={0,0,127}));
   connect(bui.yHea, couHea.y) annotation (Line(points={{61,-23},{72,-23},{72,0},
           {-30,0},{-30,22},{-22,22}},      color={0,0,127}));
-  connect(bui.yCoo, couCoo.y) annotation (Line(points={{61,-37},{72,-37},{72,
-          -74},{-28,-74},{-28,-82},{-22,-82}}, color={0,0,127}));
+  connect(bui.yCoo, couCoo.y) annotation (Line(points={{61,-37},{72,-37},{72,-60},
+          {-28,-60},{-28,-82},{-22,-82}},      color={0,0,127}));
   connect(couHea.heaPorLoa, bui.heaPorHea)
     annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
   annotation (Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-120,-120},{120,80}})),
     __Dymola_Commands(file=
-          "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRCOneElement.mos"
+          "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC_LMTD.mos"
         "Simulate and plot"));
-end CouplingRCOneElement;
+end CouplingRC_LMTD;

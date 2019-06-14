@@ -27,10 +27,10 @@ model HeatingOrCooling_LMTD
     displayUnit="degC")
     "Water return temperature at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
-  parameter Modelica.SIunits.Temperature TInd_nominal(
+  parameter Modelica.SIunits.Temperature TLoa_nominal(
     min=Modelica.SIunits.Conversions.from_degC(0),
     displayUnit="degC")
-    "Building indoor temperature at nominal conditions"
+    "Representative temperature of the load at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
   parameter Real n = 1.3 "Exponent for heat transfer: Q_flow = UA * DeltaT^n";
 
@@ -64,13 +64,14 @@ model HeatingOrCooling_LMTD
     final X_start=X_start,
     final C_start=C_start) "Volume of fluid"
     annotation (Placement(transformation(
-        extent={{10,-10},{-10,10}},
+        extent={{-10,10},{10,-10}},
         rotation=180,
-        origin={20,-10})));
+        origin={30,10})));
 
   Real frac_Q_flow "Positive fractional heat flow rate (for development only)";
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b heaPorLoa
-    "Heat port connected to the load" annotation (Placement(transformation(
+    "Heat port for heat transfer with the load"
+                                      annotation (Placement(transformation(
           extent={{-10,90},{10,110}}), iconTransformation(extent={{-10,90},{10,
             110}})));
   HeatFlowUA_LMTD heaFloUA
@@ -98,7 +99,7 @@ protected
   parameter Modelica.SIunits.ThermalConductance UA_nominal=
     Q_flow_nominal / abs(
     Buildings.DistrictEnergySystem.Loads.BaseClasses.logMeanTempDif(
-    T1_a=T_a_nominal, T1_b=T_b_nominal, T2_a=TInd_nominal, T2_b=TInd_nominal))^n
+    T1_a=T_a_nominal, T1_b=T_b_nominal, T2_a=TLoa_nominal, T2_b=TLoa_nominal))^n
     "Thermal conductance at nominal conditions";
 
   parameter Medium.ThermodynamicState sta_default=Medium.setState_pTX(
@@ -117,9 +118,9 @@ equation
   connect(res.port_b, senTSup.port_a)
     annotation (Line(points={{-40,0},{-20,0}}, color={0,127,255}));
   connect(senTSup.port_b, vol.ports[1])
-    annotation (Line(points={{0,0},{18,0}},       color={0,127,255}));
+    annotation (Line(points={{0,0},{32,0}},       color={0,127,255}));
   connect(vol.ports[2], port_b)
-    annotation (Line(points={{22,0},{100,0}}, color={0,127,255}));
+    annotation (Line(points={{28,0},{100,0}}, color={0,127,255}));
   connect(y, mulSum.u[1]) annotation (Line(points={{-120,70},{-92,70},{-92,51},{
           -62,51}}, color={0,0,127}));
   connect(offHvs.y, mulSum.u[2]) annotation (Line(points={{-79,24},{-70,24},{-70,
@@ -131,9 +132,9 @@ equation
   connect(actUA.y, heaFloUA.UA) annotation (Line(points={{41,50},{48,50},{48,55},
           {59,55}}, color={0,0,127}));
   connect(senTSup.T, heaFloUA.TLiqSup) annotation (Line(points={{-10,12.1},{-10,
-          20.1},{52,20.1},{52,41},{59,41}}, color={0,0,127}));
-  connect(vol.heatPort, heaFloUA.port_a) annotation (Line(points={{10,-10},{10,-40},
-          {50,-40},{50,48},{60,48}}, color={191,0,0}));
+          30.1},{48,30.1},{48,41},{59,41}}, color={0,0,127}));
+  connect(vol.heatPort, heaFloUA.port_a) annotation (Line(points={{40,10},{52,
+          10},{52,48},{60,48}},      color={191,0,0}));
   connect(heaFloUA.port_b, heaPorLoa) annotation (Line(points={{80,48},{92,48},{
           92,100},{0,100}}, color={191,0,0}));
   annotation (Icon(coordinateSystem(

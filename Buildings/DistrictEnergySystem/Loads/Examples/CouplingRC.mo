@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
-model CouplingRCOneElement_LMTD
+model CouplingRC
   "Example illustrating the coupling of a RC building model and a ETS model"
   import Buildings;
   extends Modelica.Icons.Example;
@@ -51,23 +51,21 @@ model CouplingRCOneElement_LMTD
         extent={{-10,-10},{10,10}},
         rotation=0,
         origin={-44,-90})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling_LMTD
-                                                                    couHea(
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couHea(
     Q_flow_nominal=bui.Q_flowHea_nominal,
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_a_nominal=318.15,
     T_b_nominal=313.15,
-    TInd_nominal=293.15)
+    TLoa_nominal=293.15)
     annotation (Placement(transformation(extent={{-20,40},{0,20}})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling_LMTD
-                                                                    couCoo(
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couCoo(
     Q_flow_nominal=bui.Q_flowCoo_nominal,
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_a_nominal=280.15,
     T_b_nominal=285.15,
-    TInd_nominal=297.15)
+    TLoa_nominal=297.15)
     annotation (Placement(transformation(extent={{-20,-100},{0,-80}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain mFloHea(k=couHea.m_flow_nominal)
     annotation (Placement(transformation(extent={{-90,28},{-70,48}})));
@@ -100,12 +98,12 @@ equation
   connect(bui.yHea, couHea.y) annotation (Line(points={{61,-23},{72,-23},{72,0},
           {-30,0},{-30,22},{-22,22}},      color={0,0,127}));
   connect(bui.yCoo, couCoo.y) annotation (Line(points={{61,-37},{72,-37},{72,
-          -74},{-28,-74},{-28,-82},{-22,-82}}, color={0,0,127}));
+          -60},{-28,-60},{-28,-82},{-22,-82}}, color={0,0,127}));
   connect(couHea.heaPorLoa, bui.heaPorHea)
     annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
   annotation (Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-120,-120},{120,80}})),
     __Dymola_Commands(file=
-          "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRCOneElement_LMTD.mos"
+          "Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
         "Simulate and plot"));
-end CouplingRCOneElement_LMTD;
+end CouplingRC;

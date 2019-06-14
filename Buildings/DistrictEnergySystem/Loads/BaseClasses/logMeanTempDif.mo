@@ -10,12 +10,11 @@ function logMeanTempDif "Logarithmic mean temperature difference"
 protected
   Modelica.SIunits.TemperatureDifference dT_a;
   Modelica.SIunits.TemperatureDifference dT_b;
-  parameter Real tay_small = 5E-2;
 algorithm
   dT_a := T1_a - T2_a;
   dT_b := T1_b - T2_b;
   dT := if dT_a * dT_b <= 0 then 0
-     else if abs(dT_a - dT_b) > tay_small * max(abs(dT_a), abs(dT_b)) then
+     else if abs(dT_a - dT_b) > 5E-2 * max(abs(dT_a), abs(dT_b)) then
      (dT_a - dT_b) / log(dT_a / dT_b) else
      (dT_a + dT_b) / 2 * (1 - (dT_a - dT_b)^2 / (dT_a * dT_b) *
      (1 + (dT_a - dT_b)^2 / (dT_a * dT_b) / 2) / 12);

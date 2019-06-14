@@ -1,6 +1,6 @@
-CouplingRCOneElement
+CouplingRC
 CouplingTimeSeries
-CouplingRCOneElement_LMTD
+CouplingRC_LMTD
 CouplingTimeSeries_LMTD
 BaseClasses
 Ressources
