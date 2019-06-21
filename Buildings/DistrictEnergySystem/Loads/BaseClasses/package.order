@@ -4,3 +4,7 @@ HeatFlowUA
 HeatFlowUA_LMTD
 PartialBuilding
 logMeanTempDif
+HeatFlowEpsilon
+Test
+HeatingOrCooling_Epsilon
+HeatFlowEpsilon1
