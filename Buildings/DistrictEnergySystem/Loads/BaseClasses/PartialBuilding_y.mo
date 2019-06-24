@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
-partial model PartialBuilding "Partial class for building model"
+partial model PartialBuilding_y "Partial class for building model"
   parameter Modelica.SIunits.HeatFlowRate Q_flowHea_nominal
     "Heating power at nominal conditions (always positive)"
     annotation(Dialog(group = "Nominal condition"));
@@ -22,20 +22,16 @@ partial model PartialBuilding "Partial class for building model"
       Placement(transformation(extent={{-310,90},{-290,110}}),
         iconTransformation(extent={{-110,60},{-90,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yCoo(
-    min=0, unit="1") "Cooling control signal"
+    min=0, max=1) "Control signal for cooling"
                                    annotation (
       Placement(transformation(extent={{300,-110},{320,-90}}),
-        iconTransformation(extent={{100,-40},{120,-20}})));
+        iconTransformation(extent={{100,-80},{120,-60}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yHea(
-    min=0, unit="1") "Heating control signal"
+    min=0, max=1) "Control signal for heating"
                                    annotation (
       Placement(transformation(extent={{300,90},{320,110}}), iconTransformation(
-          extent={{100,20},{120,40}})));
-  Controls.OBC.CDL.Interfaces.RealOutput dQ_flowHea(min=0, unit="W") "Unlet heating load" annotation (Placement(
-        transformation(extent={{300,200},{320,220}}), iconTransformation(extent={{100,80},{120,100}})));
-  Controls.OBC.CDL.Interfaces.RealOutput dQ_flowCoo(min=0, unit="W") "Unmet cooling load" annotation (Placement(
-        transformation(extent={{300,-220},{320,-200}}), iconTransformation(extent={{100,-100},{120,-80}})));
+          extent={{100,60},{120,80}})));
   annotation (Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},
             {100,100}})),                                       Diagram(
         coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},{300,300}})));
-end PartialBuilding;
+end PartialBuilding_y;

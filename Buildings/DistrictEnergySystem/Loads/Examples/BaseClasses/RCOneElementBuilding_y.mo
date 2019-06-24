@@ -1,7 +1,7 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model RCOneElementBuilding "Building model of type RC one element"
+model RCOneElementBuilding_y "Building model of type RC one element"
   import Buildings;
-  extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding;
+  extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding_y;
   Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez
                                                    HDifTil[2](
     each outSkyCon=true,
@@ -134,10 +134,6 @@ model RCOneElementBuilding "Building model of type RC one element"
     yMin=0,
     Ti=120)             "PID controller for maximum temperature"
     annotation (Placement(transformation(extent={{-60,-140},{-40,-120}})));
-  Modelica.Blocks.Sources.RealExpression realExpression(y=heaPorHea.Q_flow)
-    annotation (Placement(transformation(extent={{102,206},{122,226}})));
-  Modelica.Blocks.Sources.RealExpression realExpression1(y=heaPorCoo.Q_flow)
-    annotation (Placement(transformation(extent={{100,-228},{120,-208}})));
 equation
   connect(eqAirTemp.TEqAirWin,preTem1. T)
     annotation (Line(
@@ -255,6 +251,10 @@ equation
       horizontalAlignment=TextAlignment.Left));
   connect(maxTSet.y, from_degC1.u)
     annotation (Line(points={{-121,-130},{-102,-130}}, color={0,0,127}));
+  connect(heaPorHea, thermalZoneOneElement.intGainsConv) annotation (Line(
+        points={{-300,100},{-104,100},{-104,12},{92,12}}, color={191,0,0}));
+  connect(heaPorCoo, thermalZoneOneElement.intGainsConv) annotation (Line(
+        points={{-300,-100},{-104,-100},{-104,12},{92,12}}, color={191,0,0}));
   connect(thermalZoneOneElement.TAir, conPIDMinT.u_m) annotation (Line(points={{93,24},
           {120,24},{120,108},{-50,108},{-50,118}},        color={0,0,127}));
   connect(thermalZoneOneElement.TAir, conPIDMax.u_m) annotation (Line(points={{93,
@@ -265,12 +265,11 @@ equation
     annotation (Line(points={{-79,130},{-62,130}}, color={0,0,127}));
   connect(minTSet.y, from_degC.u)
     annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));
-  connect(heaPorHea, thermalZoneOneElement.intGainsConv)
-    annotation (Line(points={{-300,100},{-200,100},{-200,12},{92,12}}, color={191,0,0}));
-  connect(heaPorCoo, thermalZoneOneElement.intGainsConv)
-    annotation (Line(points={{-300,-100},{-200,-100},{-200,12},{92,12}}, color={191,0,0}));
-  connect(conPIDMinT.y, yHea) annotation (Line(points={{-39,130},{134,130},{134,100},{310,100}}, color={0,0,127}));
-  connect(conPIDMax.y, yCoo) annotation (Line(points={{-39,-130},{134,-130},{134,-100},{310,-100}}, color={0,0,127}));
+  connect(conPIDMax.y, yCoo) annotation (Line(points={{-39,-130},{280,-130},{
+          280,-100},{310,-100}},
+                             color={0,0,127}));
+  connect(conPIDMinT.y, yHea) annotation (Line(points={{-39,130},{280,130},{280,
+          100},{310,100}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
-end RCOneElementBuilding;
+end RCOneElementBuilding_y;

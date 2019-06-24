@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model TimeSeriesBuilding "Building model from time series"
+model TimeSeriesBuildingBck "Building model from time series"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding;
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant maxTSet(k=24)
@@ -7,13 +7,14 @@ model TimeSeriesBuilding "Building model from time series"
     annotation (Placement(transformation(extent={{-140,-70},{-120,-50}})));
   Buildings.Controls.OBC.UnitConversions.From_degC from_degC1
     annotation (Placement(transformation(extent={{-100,-70},{-80,-50}})));
-  Modelica.Blocks.Sources.CombiTimeTable loa(
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(
     tableOnFile=true,
     columns={2,3},
     tableName="csv",
     fileName=Modelica.Utilities.Files.loadResource(
         "modelica://Buildings/DistrictEnergySystem/Loads/Examples/Ressources/Loads.csv"),
-    smoothness=Modelica.Blocks.Types.Smoothness.LinearSegments) "Reader for test.csv"
+    smoothness=Modelica.Blocks.Types.Smoothness.LinearSegments)
+                     "Reader for test.csv"
     annotation (Placement(transformation(extent={{-20,-10},{0,10}})));
 
   Buildings.HeatTransfer.Sources.PrescribedTemperature prescribedTemperature
@@ -32,19 +33,19 @@ model TimeSeriesBuilding "Building model from time series"
     yMin=0,
     initType=Buildings.Controls.OBC.CDL.Types.Init.InitialOutput,
     Ti=120) "PID controller for heating"
-    annotation (Placement(transformation(extent={{150,58},{170,78}})));
+    annotation (Placement(transformation(extent={{100,60},{120,80}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gai2(k=1/Q_flowHea_nominal)
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=180,
-        origin={120,68})));
+        origin={70,70})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gai1(k=1/Q_flowHea_nominal)
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=270,
-        origin={160,26})));
-  Modelica.Blocks.Sources.RealExpression realExpression1(y=heaPorHea.Q_flow)
-    annotation (Placement(transformation(extent={{90,-12},{110,8}})));
+        origin={110,28})));
+  Modelica.Blocks.Sources.RealExpression realExpression(y=heaPorHea.Q_flow)
+    annotation (Placement(transformation(extent={{40,-10},{60,10}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conPIDCoo(
     yMax=1,
     controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
@@ -52,19 +53,19 @@ model TimeSeriesBuilding "Building model from time series"
     initType=Buildings.Controls.OBC.CDL.Types.Init.InitialOutput,
     Ti=120,
     reverseAction=true) "PID controller for cooling"
-    annotation (Placement(transformation(extent={{150,-42},{170,-22}})));
+    annotation (Placement(transformation(extent={{100,-40},{120,-20}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gai3(k=1/Q_flowCoo_nominal)
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=180,
-        origin={120,-32})));
+        origin={70,-30})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gai4(k=1/Q_flowCoo_nominal)
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=270,
-        origin={160,-72})));
-  Modelica.Blocks.Sources.RealExpression realExpression3(y=heaPorCoo.Q_flow)
-    annotation (Placement(transformation(extent={{90,-112},{110,-92}})));
+        origin={110,-70})));
+  Modelica.Blocks.Sources.RealExpression realExpression2(y=heaPorCoo.Q_flow)
+    annotation (Placement(transformation(extent={{40,-110},{60,-90}})));
 equation
   connect(maxTSet.y, from_degC1.u)
     annotation (Line(points={{-119,-60},{-102,-60}},   color={0,0,127}));
@@ -78,25 +79,26 @@ equation
     annotation (Line(points={{-79,60},{-58,60}}, color={0,0,127}));
   connect(prescribedTemperature2.port, heaPorHea) annotation (Line(points={{-36,
           60},{-20,60},{-20,100},{-300,100}}, color={191,0,0}));
-  connect(conPIDHea.u_s,gai2. y)
-    annotation (Line(points={{148,68},{131,68}},
-                                               color={0,0,127}));
-  connect(conPIDHea.u_m,gai1. y)
-    annotation (Line(points={{160,56},{160,37}}, color={0,0,127}));
-  connect(realExpression1.y, gai1.u) annotation (Line(points={{111,-2},{160,-2},{160,14}}, color={0,0,127}));
-  connect(conPIDHea.y, yHea) annotation (Line(points={{171,68},{262,68},{262,100},{310,100}},
-                           color={0,0,127}));
-  connect(conPIDCoo.u_s,gai3. y)
-    annotation (Line(points={{148,-32},{131,-32}},
-                                                 color={0,0,127}));
-  connect(conPIDCoo.u_m,gai4. y)
-    annotation (Line(points={{160,-44},{160,-61}}, color={0,0,127}));
-  connect(realExpression3.y,gai4. u) annotation (Line(points={{111,-102},{160,-102},{160,-84}},
-                            color={0,0,127}));
-  connect(conPIDCoo.y, yCoo) annotation (Line(points={{171,-32},{262,-32},{262,-100},{310,-100}},
-                             color={0,0,127}));
-  connect(loa.y[2], gai2.u) annotation (Line(points={{1,0},{40,0},{40,68},{108,68}}, color={0,0,127}));
-  connect(loa.y[1], gai3.u) annotation (Line(points={{1,0},{40.5,0},{40.5,-32},{108,-32}}, color={0,0,127}));
+  connect(conPIDHea.u_s, gai2.y)
+    annotation (Line(points={{98,70},{81,70}}, color={0,0,127}));
+  connect(conPIDHea.u_m, gai1.y)
+    annotation (Line(points={{110,58},{110,39}}, color={0,0,127}));
+  connect(combiTimeTable.y[2], gai2.u)
+    annotation (Line(points={{1,0},{28,0},{28,70},{58,70}}, color={0,0,127}));
+  connect(realExpression.y, gai1.u)
+    annotation (Line(points={{61,0},{110,0},{110,16}}, color={0,0,127}));
+  connect(conPIDHea.y, yHea) annotation (Line(points={{121,70},{212,70},{212,
+          100},{310,100}}, color={0,0,127}));
+  connect(conPIDCoo.u_s, gai3.y)
+    annotation (Line(points={{98,-30},{81,-30}}, color={0,0,127}));
+  connect(conPIDCoo.u_m, gai4.y)
+    annotation (Line(points={{110,-42},{110,-59}}, color={0,0,127}));
+  connect(realExpression2.y, gai4.u) annotation (Line(points={{61,-100},{110,
+          -100},{110,-82}}, color={0,0,127}));
+  connect(conPIDCoo.y, yCoo) annotation (Line(points={{121,-30},{212,-30},{212,
+          -100},{310,-100}}, color={0,0,127}));
+  connect(combiTimeTable.y[1], gai3.u) annotation (Line(points={{1,0},{28.5,0},
+          {28.5,-30},{58,-30}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
-end TimeSeriesBuilding;
+end TimeSeriesBuildingBck;

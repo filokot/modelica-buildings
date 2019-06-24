@@ -20,15 +20,9 @@ createPlot(
 );
 createPlot(
     id=1,
-    y={"couCoo.heaFloUA.Q_flow", "couHea.heaFloUA.Q_flow"},
+    y={"bui.heaPorCoo.Q_flow", "bui.loa.y[1]", "bui.heaPorHea.Q_flow", "bui.loa.y[2]"},
     grid=true,
     subPlot=3
-);
-createPlot(
-    id=1,
-    y={"couCoo.actUA.y", "couHea.actUA.y"},
-    grid=true,
-    subPlot=4
 );
 createPlot(
     id=2,

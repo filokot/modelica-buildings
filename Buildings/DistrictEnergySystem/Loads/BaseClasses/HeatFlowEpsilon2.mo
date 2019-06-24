@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
-model HeatFlowEpsilon
+model HeatFlowEpsilon2
   "Model for static heat transfer between a circulating fluid and a thermal load, based on effectiveness"
   extends Buildings.Fluid.Interfaces.PartialTwoPortInterface;
   Buildings.Controls.OBC.CDL.Interfaces.RealInput UA(
@@ -108,4 +108,4 @@ equation
           pattern=LinePattern.None,
           fillColor={192,192,192},
           fillPattern=FillPattern.Forward)}),                    Diagram(coordinateSystem(preserveAspectRatio=false)));
-end HeatFlowEpsilon;
+end HeatFlowEpsilon2;
