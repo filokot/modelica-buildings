@@ -113,14 +113,14 @@ model RCOneElementBuilding "Building model of type RC one element"
     extent={{4,-4},{-4,4}},
     rotation=90,
     origin={32,38})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetMin(k=20)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant minTSet(k=20)
     "Minimum temperature setpoint"
     annotation (Placement(transformation(extent={{-140,120},{-120,140}})));
   Buildings.Controls.OBC.UnitConversions.From_degC from_degC1
     annotation (Placement(transformation(extent={{-100,120},{-80,140}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetMax(k=24)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant maxTSet(k=24)
     "Maximum temperature setpoint"
-    annotation (Placement(transformation(extent={{-142,-140},{-122,-120}})));
+    annotation (Placement(transformation(extent={{-140,-140},{-120,-120}})));
   Buildings.Controls.OBC.UnitConversions.From_degC from_degC2
     annotation (Placement(transformation(extent={{-100,-140},{-80,-120}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conPIDMinT(
@@ -262,8 +262,8 @@ equation
   connect(thermalZoneOneElement.TAir, conPIDMax.u_m) annotation (Line(points={{93,
           24},{120,24},{120,-160},{-50,-160},{-50,-142}}, color={0,0,127}));
   connect(from_degC2.y, conPIDMax.u_s) annotation (Line(points={{-79,-130},{-62,-130}}, color={0,0,127}));
-  connect(TSetMax.y, from_degC2.u) annotation (Line(points={{-121,-130},{-102,-130}}, color={0,0,127}));
-  connect(TSetMin.y, from_degC1.u) annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));
+  connect(maxTSet.y, from_degC2.u) annotation (Line(points={{-119,-130},{-102,-130}}, color={0,0,127}));
+  connect(minTSet.y, from_degC1.u) annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));
   connect(from_degC1.y, conPIDMinT.u_s) annotation (Line(points={{-79,130},{-62,130}}, color={0,0,127}));
   connect(conPIDMinT.y, gai.u) annotation (Line(points={{-39,130},{-22,130}}, color={0,0,127}));
   connect(gai.y, Q_flowHeaReq[1]) annotation (Line(points={{1,130},{152,130},{152,100},{310,100}}, color={0,0,127}));

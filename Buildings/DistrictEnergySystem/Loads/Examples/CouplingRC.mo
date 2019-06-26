@@ -138,7 +138,7 @@ equation
     annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
   connect(conPIDCoo.y, mFloCoo.u) annotation (Line(points={{-99,-82},{-90,-82}}, color={0,0,127}));
   annotation (Diagram(
-        coordinateSystem(preserveAspectRatio=false, extent={{-180,-140},{120,80}})),
+        coordinateSystem(preserveAspectRatio=false, extent={{-220,-180},{160,100}})),
     __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
         "Simulate and plot"));
 end CouplingRC;
