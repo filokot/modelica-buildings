@@ -13,7 +13,7 @@ model CouplingRC "Example illustrating the coupling of a RC building model to a 
     annotation (Placement(transformation(extent={{110,-30},{90,-10}})));
 
   Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCOneElementBuilding
-    bui(Q_flowHea_nominal=500, Q_flowCoo_nominal=1000)
+    bui(Q_flowHea_nominal={500}, Q_flowCoo_nominal={1000})
     annotation (Placement(transformation(extent={{40,-40},{60,-20}})));
   Buildings.Fluid.Sources.MassFlowSource_T supHea(
     use_m_flow_in=true,
@@ -56,18 +56,55 @@ model CouplingRC "Example illustrating the coupling of a RC building model to a 
     annotation (Placement(transformation(extent={{-88,-92},{-68,-72}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couHea(
     redeclare package Medium = Medium,
-    Q_flow_nominal=bui.Q_flowHea_nominal,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    Q_flow_nominal=bui.Q_flowHea_nominal[1],
     T_a_nominal=318.15,
     T_b_nominal=313.15,
     TLoa_nominal=293.15) annotation (Placement(transformation(extent={{-20,40},{0,20}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couCoo(
     redeclare package Medium = Medium,
-    Q_flow_nominal=bui.Q_flowCoo_nominal,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    Q_flow_nominal=bui.Q_flowCoo_nominal[1],
     T_a_nominal=280.15,
     T_b_nominal=285.15,
     TLoa_nominal=297.15) annotation (Placement(transformation(extent={{-20,-100},{0,-80}})));
+  Buildings.Controls.OBC.CDL.Continuous.Gain gai2(k=1/bui.Q_flowHea_nominal[1])
+    annotation (Placement(transformation(
+        extent={{10,-10},{-10,10}},
+        rotation=180,
+        origin={-158,38})));
+  Buildings.Controls.OBC.CDL.Continuous.LimPID conPIDHea(
+    yMax=1,
+    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
+    reverseAction=false,
+    yMin=0,
+    initType=Buildings.Controls.OBC.CDL.Types.Init.InitialOutput,
+    k=1,
+    Ti=10)  "PID controller for heating"
+    annotation (Placement(transformation(extent={{-126,28},{-106,48}})));
+  Buildings.Controls.OBC.CDL.Continuous.Gain gai1(k=1/bui.Q_flowHea_nominal[1])
+    annotation (Placement(transformation(
+        extent={{10,-10},{-10,10}},
+        rotation=270,
+        origin={-116,6})));
+  Buildings.Controls.OBC.CDL.Continuous.Gain gai3(k=1/bui.Q_flowCoo_nominal[1])
+    annotation (Placement(transformation(
+        extent={{10,-10},{-10,10}},
+        rotation=180,
+        origin={-150,-82})));
+  Buildings.Controls.OBC.CDL.Continuous.LimPID conPIDCoo(
+    yMax=1,
+    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
+    yMin=0,
+    initType=Buildings.Controls.OBC.CDL.Types.Init.InitialOutput,
+    reverseAction=true,
+    Ti=10)              "PID controller for cooling"
+    annotation (Placement(transformation(extent={{-120,-92},{-100,-72}})));
+  Buildings.Controls.OBC.CDL.Continuous.Gain gai4(k=1/bui.Q_flowCoo_nominal[1])
+    annotation (Placement(transformation(
+        extent={{10,-10},{-10,10}},
+        rotation=270,
+        origin={-110,-116})));
 equation
   connect(weaDat.weaBus, bui.weaBus) annotation (Line(
       points={{90,-20},{50.1,-20}},
@@ -80,17 +117,28 @@ equation
 
   connect(supHea.ports[1], couHea.port_a) annotation (Line(points={{-38,30},{-20,30}}, color={0,127,255}));
   connect(couHea.port_b, sinHea.ports[1]) annotation (Line(points={{0,30},{90,30}}, color={0,127,255}));
-  connect(couHea.heaPorLoa, bui.heaPorHea) annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
   connect(supCoo.ports[1], couCoo.port_a) annotation (Line(points={{-34,-90},{-20,-90}}, color={0,127,255}));
   connect(couCoo.port_b, sinCoo.ports[1]) annotation (Line(points={{0,-90},{90,-90}}, color={0,127,255}));
-  connect(couCoo.heaPorLoa, bui.heaPorCoo) annotation (Line(points={{-10,-80},{-10,-37},{40,-37}}, color={191,0,0}));
-  connect(bui.yCoo, mFloCoo.u)
-    annotation (Line(points={{61,-37},{80,-37},{80,-58},{-100,-58},{-100,-82},{-90,-82}}, color={0,0,127}));
-  connect(bui.yHea, mFloHea.u)
-    annotation (Line(points={{61,-23},{80,-23},{80,0},{-100,0},{-100,38},{-92,38}}, color={0,0,127}));
+  connect(conPIDHea.y, mFloHea.u) annotation (Line(points={{-105,38},{-92,38}}, color={0,0,127}));
+  connect(gai2.y, conPIDHea.u_s) annotation (Line(points={{-147,38},{-128,38}}, color={0,0,127}));
+  connect(gai1.y, conPIDHea.u_m) annotation (Line(points={{-116,17},{-116,26}}, color={0,0,127}));
+  connect(gai4.y, conPIDCoo.u_m) annotation (Line(points={{-110,-105},{-110,-94}}, color={0,0,127}));
+  connect(gai3.y, conPIDCoo.u_s) annotation (Line(points={{-139,-82},{-122,-82}}, color={0,0,127}));
+  connect(bui.Q_flowCooAct[1], gai4.u)
+    annotation (Line(points={{61,-39},{66,-39},{66,-140},{-110,-140},{-110,-128}}, color={0,0,127}));
+  connect(bui.Q_flowHeaAct[1], gai1.u)
+    annotation (Line(points={{61,-21},{66,-21},{66,-14},{-116,-14},{-116,-6}}, color={0,0,127}));
+  connect(bui.Q_flowHeaReq[1], gai2.u)
+    annotation (Line(points={{61,-27},{80,-27},{80,60},{-180,60},{-180,38},{-170,38}}, color={0,0,127}));
+  connect(bui.Q_flowCooReq[1], gai3.u)
+    annotation (Line(points={{61,-33},{80,-33},{80,-60},{-180,-60},{-180,-82},{-162,-82}}, color={0,0,127}));
+  connect(couCoo.heaPorLoa[1], bui.heaPorCoo[1])
+    annotation (Line(points={{-10,-80},{-10,-37},{40,-37}}, color={191,0,0}));
+  connect(couHea.heaPorLoa[1], bui.heaPorHea[1])
+    annotation (Line(points={{-10,20},{-10,-23},{40,-23}}, color={191,0,0}));
+  connect(conPIDCoo.y, mFloCoo.u) annotation (Line(points={{-99,-82},{-90,-82}}, color={0,0,127}));
   annotation (Diagram(
-        coordinateSystem(preserveAspectRatio=false, extent={{-140,-140},{120,80}})),
+        coordinateSystem(preserveAspectRatio=false, extent={{-180,-140},{120,80}})),
     __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
-        "Simulate and plot"),
-    Icon(coordinateSystem(extent={{-140,-140},{120,80}})));
+        "Simulate and plot"));
 end CouplingRC;

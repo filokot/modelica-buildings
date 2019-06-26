@@ -8,10 +8,7 @@ model HeatFlowEffectiveness
     Q_flow=heaPor.Q_flow,
     mWat_flow=0);
   Buildings.Controls.OBC.CDL.Interfaces.RealInput UA(
-    quantity="ThermalConductance",
-    unit="W/K",
-    displayUnit="W/K",
-    min=0)
+    quantity="ThermalConductance", unit="W/K", min=0)
     "Thermal conductance"
     annotation (Placement(transformation(extent={{-20,-20},{20,20}},
         rotation=0,

@@ -1,14 +1,6 @@
-HeatingOrCooling_LMTD
-HeatFlowUA
-HeatFlowUANoPort
-HeatFlowUA_LMTD
+HeatingOrCooling
+HeatFlowEffectiveness
+SimplifiedBuildingODE
 PartialBuilding
 logMeanTempDif
 Test
-HeatFlowEpsilon2
-HeatFlowEffectiveness
-HeatingOrCooling_UA
-HeatingOrCooling
-HeatingOrCoolingNoPort
-PartialBuildingNoPort
-PartialBuilding_y

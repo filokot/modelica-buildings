@@ -5,6 +5,9 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
     show_T=true,
     final m_flow_nominal=abs(Q_flow_nominal/cp_nominal/(T_a_nominal - T_b_nominal)));
 
+  parameter Integer nLoa = 1
+    "Number of connected loads";
+
   parameter Modelica.SIunits.Time tau = 30
     "Time constant at nominal flow (if energyDynamics <> SteadyState)"
      annotation (Dialog(tab = "Dynamics", group="Nominal condition"));
@@ -31,7 +34,7 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
     displayUnit="degC")
     "Representative temperature of the load at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
-
+  parameter Modelica.SIunits.PressureDifference dp_nominal=0 "Pressure difference";
   Buildings.Fluid.MixingVolumes.MixingVolume vol(
     redeclare package Medium=Medium,
     final m_flow_nominal=m_flow_nominal,
@@ -51,15 +54,12 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
         extent={{-10,10},{10,-10}},
         rotation=180,
         origin={30,10})));
-
-  Real frac_Q_flow "Positive fractional heat flow rate (for development only)";
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b heaPorLoa
-    "Heat port for heat transfer with the load"
-                                      annotation (Placement(transformation(
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b heaPorLoa[nLoa]
+    "Heat port transfering heat to the load"
+    annotation (Placement(transformation(
           extent={{-10,90},{10,110}}), iconTransformation(extent={{-10,90},{10,
             110}})));
-  Modelica.Blocks.Sources.RealExpression UA(y=UA_nominal*(m_flow/m_flow_nominal)^0.8)
-                                                          "Offset control signal for smooth Heaviside function"
+  Modelica.Blocks.Sources.RealExpression UA(y=UA_nominal) "Offset control signal for smooth Heaviside function"
     annotation (Placement(transformation(extent={{-100,30},{-80,50}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowEffectiveness heaFloEps(
    redeclare package Medium=Medium,
@@ -67,7 +67,10 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
    final homotopyInitialization=homotopyInitialization,
     dp_nominal=dp_nominal)
    annotation (Placement(transformation(extent={{-40,-10},{-20,10}})));
-  parameter Modelica.SIunits.PressureDifference dp_nominal=0 "Pressure difference";
+
+  // FOR DEVELOPMENT ONLY
+  Real frac_Q_flow "Positive fractional heat flow rate";
+
 protected
   parameter Modelica.SIunits.SpecificHeatCapacity cp_nominal=
     Medium.specificHeatCapacityCp(
@@ -88,10 +91,13 @@ protected
     "Start value for outflowing enthalpy";
   parameter Real y_small = 1E-2;
 equation
-  frac_Q_flow = abs(heaPorLoa.Q_flow) / Q_flow_nominal;
+  // FOR DEVELOPMENT ONLY
+  frac_Q_flow = abs(heaFloEps.heaPor.Q_flow / Q_flow_nominal);
+  for i in 1:nLoa loop
+    connect(heaFloEps.heaPor, heaPorLoa[i])
+      annotation (Line(points={{-30,-8},{-30,-40},{80,-40},{80,100},{0,100}}, color={191,0,0}));
+  end for;
   connect(port_a, heaFloEps.port_a) annotation (Line(points={{-100,0},{-40,0}}, color={0,127,255}));
-  connect(heaFloEps.heaPor, heaPorLoa)
-    annotation (Line(points={{-30,-8},{-30,-40},{80,-40},{80,100},{0,100}}, color={191,0,0}));
   connect(UA.y, heaFloEps.UA) annotation (Line(points={{-79,40},{-60,40},{-60,8},{-42,8}}, color={0,0,127}));
   connect(heaFloEps.port_b, vol.ports[1]) annotation (Line(points={{-20,0},{32,0}}, color={0,127,255}));
   connect(vol.ports[2], port_b) annotation (Line(points={{28,0},{100,0}}, color={0,127,255}));

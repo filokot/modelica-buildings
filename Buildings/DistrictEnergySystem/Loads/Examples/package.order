@@ -1,8 +1,4 @@
 CouplingRC
 CouplingTimeSeries
-CouplingRC_LMTD
-CouplingTimeSeries_LMTD
 BaseClasses
 Ressources
-CouplingRC_Effectiveness
-CouplingRCOneElementNoPort

@@ -6,7 +6,7 @@ simulateModel("Buildings.DistrictEnergySystem.Loads.Examples.CouplingTimeSeries"
 createPlot(
     id=1,
     position={10, 20, 670, 900},
-    y={"bui.maxTSet.y", "bui.minTSet.y"},
+    y={"bui.maxTSet.y", "bui.minTSet.y", "bui.heaPorHea[1].T", "bui.heaPorCoo[1].T"},
     autoscale=true,
     // autoerase=true,
     // autoreplot=true,
@@ -20,7 +20,7 @@ createPlot(
 );
 createPlot(
     id=1,
-    y={"bui.heaPorCoo.Q_flow", "bui.loa.y[1]", "bui.heaPorHea.Q_flow", "bui.loa.y[2]"},
+    y={"bui.heaPorCoo.Q_flow", "bui.loa.y[1]", "bui.heaPorHea[1].Q_flow", "bui.loa.y[2]"},
     grid=true,
     subPlot=3
 );
