@@ -1,4 +1,7 @@
 CouplingRC
-CouplingTimeSeries
 BaseClasses
 Ressources
+CouplingTimeSeries
+CouplingTimeSeriesInv
+CouplingTimeSeriesSplit
+CouplingRCSplit

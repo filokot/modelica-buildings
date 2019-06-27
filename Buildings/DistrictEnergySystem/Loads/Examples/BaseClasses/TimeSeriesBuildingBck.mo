@@ -1,9 +1,9 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model TimeSeriesBuilding "Building model from time series"
+model TimeSeriesBuildingBck "Building model from time series"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
-    nHeaLoa=1,
-    nCooLoa=1,
+    final nHeaLoa=1,
+    final nCooLoa=1,
     final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE},
     final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE});
   Modelica.Blocks.Sources.CombiTimeTable loa(
@@ -42,4 +42,4 @@ equation
     annotation (Line(points={{41,2},{80,2},{80,97},{-198,97}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
-end TimeSeriesBuilding;
+end TimeSeriesBuildingBck;

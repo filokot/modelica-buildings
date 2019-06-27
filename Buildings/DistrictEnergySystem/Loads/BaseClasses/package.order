@@ -1,6 +1,13 @@
-HeatingOrCooling
 HeatFlowEffectiveness
 SimplifiedBuildingODE
 PartialBuilding
 logMeanTempDif
 Test
+HeatingOrCoolingVec
+HeatingOrCooling
+EffectivenessDirect
+TestInverse
+EffectivenessInverse
+HeatingOrCoolingSplit
+ThermSplitterInput
+ComputeSplitFactors

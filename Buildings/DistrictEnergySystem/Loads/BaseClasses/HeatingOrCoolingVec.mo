@@ -1,9 +1,12 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
-model HeatingOrCooling "Model for static heat transfer between a circulating fluid and a thermal load"
+model HeatingOrCoolingVec "Model for static heat transfer between a circulating fluid and a thermal load"
   extends Buildings.Fluid.Interfaces.LumpedVolumeDeclarations;
   extends Buildings.Fluid.Interfaces.PartialTwoPortInterface(
     show_T=true,
-    final m_flow_nominal=abs(Q_flow_nominal / cp_nominal / (T_a_nominal - T_b_nominal)));
+    final m_flow_nominal=sum(m_flowLoa_nominal));
+
+  parameter Integer nLoa = 1
+    "Number of connected loads";
 
   parameter Modelica.SIunits.Time tau = 30
     "Time constant at nominal flow (if energyDynamics <> SteadyState)"
@@ -13,8 +16,6 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
   parameter Boolean homotopyInitialization = true "= true, use homotopy method"
     annotation(Evaluate=true, Dialog(tab="Advanced"));
 
-  parameter Modelica.SIunits.HeatFlowRate Q_flow_nominal(min=0)
-    "Thermal power at nominal conditions (>0)";
   parameter Modelica.SIunits.Temperature T_a_nominal(
     min=Modelica.SIunits.Conversions.from_degC(0),
     displayUnit="degC")
@@ -25,12 +26,15 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
     displayUnit="degC")
     "Water return temperature at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
-  parameter Modelica.SIunits.Temperature TLoa_nominal(
-    min=Modelica.SIunits.Conversions.from_degC(0),
-    displayUnit="degC")
+  parameter Modelica.SIunits.Temperature TLoa_nominal[nLoa](
+    each min=Modelica.SIunits.Conversions.from_degC(0),
+    each displayUnit="degC")
     "Representative temperature of the load at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
 
+  parameter Modelica.SIunits.HeatFlowRate Q_flowLoa_nominal[nLoa]
+    "Thermal power at nominal conditions (>0)"
+    annotation(Dialog(group = "Nominal condition"));
   parameter Modelica.SIunits.PressureDifference dp_nominal=0 "Pressure difference";
   Buildings.Fluid.MixingVolumes.MixingVolume vol(
     redeclare package Medium=Medium,
@@ -51,7 +55,7 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
         extent={{-10,10},{10,-10}},
         rotation=180,
         origin={30,10})));
-  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b heaPorLoa
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b heaPorLoa[nLoa]
     "Heat port transfering heat to the load"
     annotation (Placement(transformation(
           extent={{-10,90},{10,110}}), iconTransformation(extent={{-10,90},{10,
@@ -69,12 +73,16 @@ model HeatingOrCooling "Model for static heat transfer between a circulating flu
   Real frac_Q_flow "Positive fractional heat flow rate";
 
 protected
+  parameter Modelica.SIunits.MassFlowRate m_flowLoa_nominal[nLoa] = abs(
+    Q_flowLoa_nominal / cp_nominal / (T_a_nominal - T_b_nominal));
+  parameter Modelica.SIunits.HeatFlowRate Q_flow_nominal = sum(Q_flowLoa_nominal);
   parameter Modelica.SIunits.SpecificHeatCapacity cp_nominal=
     Medium.specificHeatCapacityCp(
       Medium.setState_pTX(Medium.p_default, T_a_nominal, Medium.X_default))
     "Specific heat capacity at nominal conditions";
-  parameter Modelica.SIunits.ThermalConductance UA_nominal=
-    Q_flow_nominal / abs(Buildings.DistrictEnergySystem.Loads.BaseClasses.logMeanTempDif(
+  parameter Modelica.SIunits.ThermalConductance UA_nominal[nLoa]=
+    Q_flowLoa_nominal ./
+      abs(Buildings.DistrictEnergySystem.Loads.BaseClasses.logMeanTempDif(
         T1_a=T_a_nominal, T1_b=T_b_nominal, T2_a=TLoa_nominal, T2_b=TLoa_nominal))
     "Thermal conductance at nominal conditions";
   parameter Medium.ThermodynamicState sta_default = Medium.setState_pTX(
@@ -85,11 +93,14 @@ protected
       T=T_start, p=p_start, X=X_start);
   parameter Modelica.SIunits.SpecificEnthalpy h_outflow_start = Medium.specificEnthalpy(sta_start)
     "Start value for outflowing enthalpy";
+  parameter Real y_small = 1E-2;
 equation
   // FOR DEVELOPMENT ONLY
   frac_Q_flow = abs(heaFloEps.heaPor.Q_flow / Q_flow_nominal);
-  connect(heaFloEps.heaPor, heaPorLoa)
-    annotation (Line(points={{-30,-8},{-30,-40},{80,-40},{80,100},{0,100}}, color={191,0,0}));
+  for i in 1:nLoa loop
+    connect(heaFloEps.heaPor, heaPorLoa[i])
+      annotation (Line(points={{-30,-8},{-30,-40},{80,-40},{80,100},{0,100}}, color={191,0,0}));
+  end for;
   connect(port_a, heaFloEps.port_a) annotation (Line(points={{-100,0},{-40,0}}, color={0,127,255}));
   connect(UA.y, heaFloEps.UA) annotation (Line(points={{-79,40},{-60,40},{-60,8},{-42,8}}, color={0,0,127}));
   connect(heaFloEps.port_b, vol.ports[1]) annotation (Line(points={{-20,0},{32,0}}, color={0,127,255}));
@@ -140,4 +151,4 @@ equation
           Rectangle(extent={{-100,100},{100,-100}}, lineColor={95,95,95})}),
                                             Diagram(
         coordinateSystem(preserveAspectRatio=false)));
-end HeatingOrCooling;
+end HeatingOrCoolingVec;

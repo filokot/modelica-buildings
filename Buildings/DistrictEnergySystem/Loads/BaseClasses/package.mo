@@ -43,8 +43,8 @@ package BaseClasses "BaseClasses - Package with base classes for Loads"
       annotation (Placement(transformation(extent={{-140,-110},{-100,
               -70}}), iconTransformation(extent={{-140,-100},{-100,-60}})));
     Buildings.Controls.OBC.CDL.Interfaces.RealOutput TInd(
-      quantity="ThermodynamicTemperature", unit="K", displayUnit="degC")
-      "Indoor temperature" annotation (Placement(transformation(extent={{100,-10},{120,10}})));
+      quantity="ThermodynamicTemperature", unit="K", displayUnit="degC") "Indoor temperature"
+                           annotation (Placement(transformation(extent={{100,-10},{120,10}})));
 protected
     parameter Modelica.SIunits.ThermalConductance G = -Q_flowHea_nominal / (TOutHea_nominal - TIndHea_nominal)
     "Lumped thermal conductance representing all deltaT dependent heat transfer mechanisms";

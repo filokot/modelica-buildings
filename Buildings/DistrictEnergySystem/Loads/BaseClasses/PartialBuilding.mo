@@ -89,20 +89,27 @@ partial model PartialBuilding "Partial class for building model"
 protected
   parameter Integer nHeaLoaH = Modelica.Math.BooleanVectors.countTrue(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort for el in heaLoaTyp});
-
+  parameter Integer heaLoaH_idx[nHeaLoaH] = Modelica.Math.BooleanVectors.index(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort for el in heaLoaTyp});
   parameter Integer nHeaLoaT = Modelica.Math.BooleanVectors.countTrue(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT for el in heaLoaTyp});
-
+  parameter Integer heaLoaT_idx[nHeaLoaT] = Modelica.Math.BooleanVectors.index(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT for el in heaLoaTyp});
   parameter Integer nHeaLoaO = Modelica.Math.BooleanVectors.countTrue(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE for el in heaLoaTyp});
-
+  parameter Integer heaLoaO_idx[nHeaLoaO] = Modelica.Math.BooleanVectors.index(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE for el in heaLoaTyp});
   parameter Integer nCooLoaH = Modelica.Math.BooleanVectors.countTrue(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort for el in cooLoaTyp});
-
+  parameter Integer cooLoaH_idx[nCooLoaH] = Modelica.Math.BooleanVectors.index(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort for el in cooLoaTyp});
   parameter Integer nCooLoaT = Modelica.Math.BooleanVectors.countTrue(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT for el in cooLoaTyp});
-
+  parameter Integer cooLoaT_idx[nCooLoaT] = Modelica.Math.BooleanVectors.index(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT for el in cooLoaTyp});
   parameter Integer nCooLoaO = Modelica.Math.BooleanVectors.countTrue(
+    {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE for el in cooLoaTyp});
+  parameter Integer cooLoaO_idx[nCooLoaO] = Modelica.Math.BooleanVectors.index(
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE for el in cooLoaTyp});
 equation
   for i in 1:nCooLoa loop
@@ -113,8 +120,6 @@ equation
     connect(Q_flowHea[i].y, Q_flowHeaAct[i])
     annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
   end for;
-  // Loads represented by thermal model with heat port have to be connected by the user.
-  // Loads at temperature computed by ODE model are the first to be connected.
   if nHeaLoaO > 0 then
     for i in 1:nHeaLoaO loop
       connect(weaBus.TDryBul, heaLoaODE[i].TOut)
@@ -126,23 +131,22 @@ equation
           index=-1,
           extent={{6,3},{6,3}},
           horizontalAlignment=TextAlignment.Left));
-      connect(Q_flowHea[i].y, heaLoaODE[i].Q_flowAct)
-        annotation (Line(points={{281,210},{288,210},{288,92},{-198,92}}, color={0,0,127}));
-      connect(THeaLoaODE[i].port, heaPorHea[i])
-        annotation (Line(points={{-260,100},{-300,100}}, color={191,0,0}));
       connect(heaLoaODE[i].TInd, THeaLoaODE[i].T)
         annotation (Line(points={{-221,100},{-238,100}}, color={0,0,127}));
+      // Connection to I/O variables.
+      connect(Q_flowHea[heaLoaO_idx[i]].y, heaLoaODE[i].Q_flowAct)
+        annotation (Line(points={{281,210},{288,210},{288,92},{-198,92}}, color={0,0,127}));
+      connect(THeaLoaODE[i].port, heaPorHea[heaLoaO_idx[i]])
+        annotation (Line(points={{-260,100},{-300,100}}, color={191,0,0}));
     end for;
   end if;
-  // Loads at prescribed temperature are the next to be connected.
   if nHeaLoaT > 0 then
     for i in 1:nHeaLoaT loop
-      connect(preTHeaLoa[i + nHeaLoaO].port, heaPorHea[i + nHeaLoaO])
+      // Connection to I/O variables.
+      connect(preTHeaLoa[i].port, heaPorHea[heaLoaT_idx[i]])
         annotation (Line(points={{-260,50},{-280,50},{-280,100},{-300,100}}, color={191,0,0}));
     end for;
   end if;
-  // Loads represented by thermal model with heat port have to be connected by the user.
-  // Loads at temperature computed by ODE model are the first to be connected.
   if nCooLoaO > 0 then
     for i in 1:nCooLoaO loop
       connect(weaBus.TDryBul, cooLoaODE[i].TOut)
@@ -154,18 +158,19 @@ equation
         index=-1,
         extent={{6,3},{6,3}},
         horizontalAlignment=TextAlignment.Left));
-      connect(Q_flowCoo[i].y, cooLoaODE[i].Q_flowAct)
-        annotation (Line(points={{281,-210},{288,-210},{288,-108},{-198,-108}}, color={0,0,127}));
-      connect(TCooLoaODE[i].port, heaPorCoo[i])
-        annotation (Line(points={{-260,-100},{-300,-100}}, color={191,0,0}));
       connect(cooLoaODE[i].TInd, TCooLoaODE[i].T)
         annotation (Line(points={{-221,-100},{-238,-100}}, color={0,0,127}));
+      // Connection to I/O variables.
+      connect(Q_flowCoo[cooLoaO_idx[i]].y, cooLoaODE[i].Q_flowAct)
+        annotation (Line(points={{281,-210},{288,-210},{288,-108},{-198,-108}}, color={0,0,127}));
+      connect(TCooLoaODE[i].port, heaPorCoo[cooLoaO_idx[i]])
+        annotation (Line(points={{-260,-100},{-300,-100}}, color={191,0,0}));
     end for;
   end if;
-  // Loads at prescribed temperature are the next to be connected.
   if nCooLoaT > 0 then
     for i in 1:nCooLoaT loop
-      connect(preTCooLoa[i + nCooLoaO].port, heaPorCoo[i + nCooLoaO])
+      // Connection to I/O variables.
+      connect(preTCooLoa[i].port, heaPorCoo[cooLoaT_idx[i]])
         annotation (Line(points={{-260,-50},{-280,-50},{-280,-100},{-300,-100}}, color={191,0,0}));
     end for;
   end if;

@@ -2,8 +2,8 @@ within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
 model RCOneElementBuilding "Building model of type RC one element"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
-    final nLoaHea=1,
-    final nLoaCoo=1,
+    final nHeaLoa=1,
+    final nCooLoa=1,
     final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort},
     final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort});
   Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez
@@ -266,14 +266,14 @@ equation
   connect(minTSet.y, from_degC1.u) annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));
   connect(from_degC1.y, conPIDMinT.u_s) annotation (Line(points={{-79,130},{-62,130}}, color={0,0,127}));
   connect(conPIDMinT.y, gai.u) annotation (Line(points={{-39,130},{-22,130}}, color={0,0,127}));
-  connect(gai.y, Q_flowHeaReq[1]) annotation (Line(points={{1,130},{152,130},{152,100},{310,100}}, color={0,0,127}));
   connect(conPIDMax.y, gai1.u) annotation (Line(points={{-39,-130},{-22,-130}}, color={0,0,127}));
-  connect(gai1.y, Q_flowCooReq[1])
-    annotation (Line(points={{1,-130},{152,-130},{152,-100},{310,-100}}, color={0,0,127}));
   connect(heaPorHea[1], thermalZoneOneElement.intGainsConv)
     annotation (Line(points={{-300,100},{-282,100},{-282,12},{92,12}}, color={191,0,0}));
   connect(heaPorCoo[1], thermalZoneOneElement.intGainsConv)
     annotation (Line(points={{-300,-100},{-282,-100},{-282,12},{92,12}}, color={191,0,0}));
+  connect(gai.y, Q_flowHeaReq[1]) annotation (Line(points={{1,130},{152,130},{152,100},{310,100}}, color={0,0,127}));
+  connect(gai1.y, Q_flowCooReq[1])
+    annotation (Line(points={{1,-130},{154,-130},{154,-100},{310,-100}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
 end RCOneElementBuilding;

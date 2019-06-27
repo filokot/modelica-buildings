@@ -8,8 +8,7 @@ model HeatFlowEffectiveness
     Q_flow=heaPor.Q_flow,
     mWat_flow=0);
   Buildings.Controls.OBC.CDL.Interfaces.RealInput UA(
-    quantity="ThermalConductance", unit="W/K", min=0)
-    "Thermal conductance"
+    quantity="ThermalConductance", unit="W/K", min=0) "Thermal conductance"
     annotation (Placement(transformation(extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,70}),
@@ -17,7 +16,7 @@ model HeatFlowEffectiveness
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,80})));
-  Real eps "Heat exchange effectiveness";
+  Real eps "Heat exchanger effectiveness";
   Modelica.SIunits.Temperature port_a_T
   "Temperature of ideally mixed fluid at component side of port_a";
   Modelica.SIunits.Temperature port_b_T
@@ -52,6 +51,7 @@ protected
   final parameter Real fReg = 104*deltaInvReg^6
     "Polynomial coefficient for inverseXRegularized";
   Real m_flow_inv(unit="s/kg") "Regularization of 1/m_flow";
+
 equation
   eps = 1 - exp(-UA * abs(m_flow_inv) / cpInl);
   heaPor.Q_flow = eps * abs(m_flow) * cpInl * (heaPor.T - TInl);

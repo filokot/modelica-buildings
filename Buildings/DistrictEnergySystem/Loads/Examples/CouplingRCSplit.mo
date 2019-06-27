@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
-model CouplingRC "Example illustrating the coupling of a RC building model to a fluid loop"
+model CouplingRCSplit "Example illustrating the coupling of a RC building model to a fluid loop"
   import Buildings;
   extends Modelica.Icons.Example;
   package Medium = Buildings.Media.Water "Fluid in the pipes";
@@ -91,20 +91,30 @@ model CouplingRC "Example illustrating the coupling of a RC building model to a 
         extent={{10,-10},{-10,10}},
         rotation=270,
         origin={-110,-110})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couHea(
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCoolingSplit couHea(
     redeclare package Medium = Medium,
-    Q_flow_nominal=bui.Q_flowHea_nominal[1],
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_a_nominal=318.15,
     T_b_nominal=313.15,
-    TLoa_nominal=293.15) annotation (Placement(transformation(extent={{0,40},{20,20}})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling couCoo(
+    Q_flowLoa_nominal=bui.Q_flowHea_nominal,
+    TLoa_nominal=fill(273.15 + 20, size(bui.Q_flowHea_nominal, 1)),
+    nLoa=1) annotation (Placement(transformation(extent={{0,40},{20,20}})));
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCoolingSplit couCoo(
     redeclare package Medium = Medium,
-    Q_flow_nominal=bui.Q_flowCoo_nominal[1],
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_a_nominal=280.15,
     T_b_nominal=285.15,
-    TLoa_nominal=297.15) annotation (Placement(transformation(extent={{0,-100},{20,-80}})));
+    Q_flowLoa_nominal=bui.Q_flowCoo_nominal,
+    TLoa_nominal=fill(24 + 273.15, size(bui.Q_flowCoo_nominal, 1)),
+    nLoa=1) annotation (Placement(transformation(extent={{0,-100},{20,-80}})));
+  Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum(nin=1)
+    annotation (Placement(transformation(extent={{-200,28},{-180,48}})));
+  Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum3(nin=1)
+    annotation (Placement(transformation(extent={{-200,-92},{-180,-72}})));
+  Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum1(nin=1)
+    annotation (Placement(transformation(extent={{-60,-16},{-80,4}})));
+  Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum2(nin=1)
+    annotation (Placement(transformation(extent={{-60,-150},{-80,-130}})));
 equation
   connect(weaDat.weaBus, bui.weaBus) annotation (Line(
       points={{90,-20},{50.1,-20}},
@@ -125,18 +135,26 @@ equation
   connect(gai4.y, conPIDCoo.u_m) annotation (Line(points={{-110,-99},{-110,-94}},  color={0,0,127}));
   connect(gai3.y, conPIDCoo.u_s) annotation (Line(points={{-139,-82},{-122,-82}}, color={0,0,127}));
   connect(conPIDCoo.y, mFloCoo.u) annotation (Line(points={{-99,-82},{-82,-82}}, color={0,0,127}));
-  connect(couCoo.heaPorLoa, bui.heaPorCoo[1]) annotation (Line(points={{10,-80},{10,-37},{40,-37}}, color={191,0,0}));
-  connect(couHea.heaPorLoa, bui.heaPorHea[1]) annotation (Line(points={{10,20},{10,-23},{40,-23}}, color={191,0,0}));
-  connect(bui.Q_flowHeaAct[1], gai1.u)
-    annotation (Line(points={{61,-21},{66,-21},{66,-12},{-110,-12},{-110,-2}}, color={0,0,127}));
-  connect(bui.Q_flowCooAct[1], gai4.u)
-    annotation (Line(points={{61,-39},{66,-39},{66,-140},{-110,-140},{-110,-122}}, color={0,0,127}));
-  connect(bui.Q_flowHeaReq[1], gai2.u)
-    annotation (Line(points={{61,-27},{80,-27},{80,60},{-180,60},{-180,38},{-162,38}}, color={0,0,127}));
-  connect(bui.Q_flowCooReq[1], gai3.u)
-    annotation (Line(points={{61,-33},{80,-33},{80,-160},{-180,-160},{-180,-82},{-162,-82}}, color={0,0,127}));
+  connect(mulSum1.y, gai1.u) annotation (Line(points={{-81,-6},{-110,-6},{-110,-2}}, color={0,0,127}));
+  connect(mulSum2.y, gai4.u) annotation (Line(points={{-81,-140},{-110,-140},{-110,-122}}, color={0,0,127}));
+  connect(mulSum3.y, gai3.u) annotation (Line(points={{-179,-82},{-162,-82}}, color={0,0,127}));
+  connect(bui.heaPorHea, couHea.heaPorLoa[1:1]) annotation (Line(points={{40,-23},{10,-23},{10,20}}, color={191,0,0}));
+  connect(bui.heaPorCoo, couCoo.heaPorLoa[1:1]) annotation (Line(points={{40,-37},{10,-37},{10,-80}}, color={191,0,0}));
+  connect(mulSum.y, gai2.u) annotation (Line(points={{-179,38},{-162,38}}, color={0,0,127}));
+  connect(bui.Q_flowCooReq, mulSum3.u[1:1])
+    annotation (Line(points={{61,-33},{80,-33},{80,-60},{-220,-60},{-220,-82},{-202,-82}}, color={0,0,127}));
+  connect(bui.Q_flowCooAct, mulSum2.u[1:1])
+    annotation (Line(points={{61,-39},{70,-39},{70,-140},{-58,-140}}, color={0,0,127}));
+  connect(bui.Q_flowHeaAct, mulSum1.u[1:1])
+    annotation (Line(points={{61,-21},{68,-21},{68,-6},{-58,-6}}, color={0,0,127}));
+  connect(bui.Q_flowHeaReq, mulSum.u[1:1])
+    annotation (Line(points={{61,-27},{80,-27},{80,60},{-220,60},{-220,38},{-202,38}}, color={0,0,127}));
+  connect(bui.Q_flowHeaReq, couHea.Q_flow[1:1])
+    annotation (Line(points={{61,-27},{80,-27},{80,8},{-10,8},{-10,26},{-2,26}}, color={0,0,127}));
+  connect(bui.Q_flowCooReq, couCoo.Q_flow[1:1])
+    annotation (Line(points={{61,-33},{80,-33},{80,-74},{-10,-74},{-10,-86},{-2,-86}}, color={0,0,127}));
   annotation (Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-180},{160,100}})),
     __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
         "Simulate and plot"));
-end CouplingRC;
+end CouplingRCSplit;
