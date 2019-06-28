@@ -5,7 +5,8 @@ model TimeSeriesBuilding2Loads "Building model from time series"
     nCooLoa=1,
     final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE},
     nHeaLoa=2,
-    final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE,Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT},
+    final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE,
+     Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT},
     Q_flowCoo_nominal={2000},
     Q_flowHea_nominal={500,1000});
 
@@ -39,7 +40,7 @@ model TimeSeriesBuilding2Loads "Building model from time series"
   Buildings.Controls.OBC.UnitConversions.From_degC from_degC4
     annotation (Placement(transformation(extent={{-200,40},{-220,60}})));
 equation
-  connect(Q_flowHea.y, Q_flowHeaAct) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
+  connect(Q_flowHeaVal.y, Q_flowHeaAct) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
   connect(TCooLoaODE.T, cooLoaODE.TInd) annotation (Line(points={{-238,-100},{-221,-100}}, color={0,0,127}));
   connect(minTSet.y, from_degC1.u) annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));
   connect(from_degC1.y, heaLoaODE[1].TSet)

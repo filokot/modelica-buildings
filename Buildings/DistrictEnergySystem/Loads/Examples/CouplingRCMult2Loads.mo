@@ -26,18 +26,20 @@ model CouplingRCMult2Loads "Example illustrating the coupling of a RC building m
         origin={-32,30})));
   Buildings.Fluid.Sources.FixedBoundary sinHea(
     redeclare package Medium = Medium,
-    T=couHea.T_a_nominal,
     nPorts=1,
-    p=300000) "Sink for heating water"
+    p=300000,
+    T=couHea.T_b_nominal)
+              "Sink for heating water"
                                       annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={100,30})));
   Buildings.Fluid.Sources.FixedBoundary sinCoo(
     redeclare package Medium = Medium,
-    T=couCoo.T_a_nominal,
+    nPorts=1,
     p=300000,
-    nPorts=1) "Sink for chilled water" annotation (Placement(transformation(
+    T=couCoo.T_b_nominal)
+              "Sink for chilled water" annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={100,-90})));

@@ -26,7 +26,7 @@ model TimeSeriesBuilding "Building model from time series"
   Buildings.Controls.OBC.UnitConversions.From_degC from_degC2
     annotation (Placement(transformation(extent={{-100,-140},{-80,-120}})));
 equation
-  connect(Q_flowHea.y, Q_flowHeaAct) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
+  connect(Q_flowHeaVal.y, Q_flowHeaAct) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
   connect(TCooLoaODE.T, cooLoaODE.TInd) annotation (Line(points={{-238,-100},{-221,-100}}, color={0,0,127}));
   connect(loa.y[2], Q_flowHeaReq[1]) annotation (Line(points={{41,2},{172,2},{172,100},{310,100}}, color={0,0,127}));
   connect(minTSet.y, from_degC1.u) annotation (Line(points={{-119,130},{-102,130}}, color={0,0,127}));

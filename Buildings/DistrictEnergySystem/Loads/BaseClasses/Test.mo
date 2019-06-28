@@ -17,7 +17,7 @@ model Test
     offset=-1,
     startTime=0.25,
     duration=100000)
-                    annotation (Placement(transformation(extent={{-96,-2},{-76,18}})));
+                    annotation (Placement(transformation(extent={{-96,24},{-76,44}})));
   Fluid.Sources.MassFlowSource_T           supHea1(
     use_m_flow_in=true,
     redeclare package Medium = Medium,
@@ -45,12 +45,14 @@ model Test
     T_b_nominal=313.15,
     TLoa_nominal=293.15) annotation (Placement(transformation(extent={{-10,40},{10,60}})));
   Modelica.Blocks.Sources.RealExpression realExpression1[1](y={heaOrCoo1.m_flow_nominal})
-    annotation (Placement(transformation(extent={{-54,-100},{-34,-80}})));
+    annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={-44,-90})));
   Fluid.Sources.MassFlowSource_T           supHea2(
     use_m_flow_in=true,
     redeclare package Medium = Medium,
-    T=318.15,
-    nPorts=1) "Supply for heating water"          annotation (Placement(
+    nPorts=1,
+    T=318.15) "Supply for heating water"          annotation (Placement(
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -62,8 +64,13 @@ model Test
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_a_nominal=318.15,
     T_b_nominal=313.15,
-    TLoa_nominal={293.15}) annotation (Placement(transformation(extent={{20,-70},{40,-50}})));
+    TLoa_nominal={293.15},
+    reverseAction=false)   annotation (Placement(transformation(extent={{20,-76},{40,-60}})));
   Controls.OBC.CDL.Continuous.Product pro annotation (Placement(transformation(extent={{-62,18},{-42,38}})));
+  Modelica.Blocks.Sources.RealExpression realExpression7[1](y={heaOrCoo1.Q_flow_nominal})
+    annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={-20,-90})));
 equation
   connect(supHea1.ports[1], heaOrCoo.port_a) annotation (Line(points={{-42,60},{-34,60},{-34,50},{-10,50}},
                                                                                           color={0,127,255}));
@@ -73,16 +80,16 @@ equation
     annotation (Line(points={{-20,-30},{34,-30},{34,60},{0,60}}, color={191,0,0}));
   connect(supHea1.m_flow_in, realExpression6.y) annotation (Line(points={{-64,68},{-79,68}}, color={0,0,127}));
   connect(fixedTemperature.port, heaOrCoo1.heaPorLoa[1])
-    annotation (Line(points={{-20,-30},{6,-30},{6,-50},{30,-50}}, color={191,0,0}));
+    annotation (Line(points={{-20,-30},{30,-30},{30,-60}},        color={191,0,0}));
   connect(heaOrCoo1.port_b, sinHea.ports[2])
-    annotation (Line(points={{40,-60},{54,-60},{54,-2},{68,-2}}, color={0,127,255}));
+    annotation (Line(points={{40,-70},{54,-70},{54,-2},{68,-2}}, color={0,127,255}));
   connect(supHea2.ports[1], heaOrCoo1.port_a)
-    annotation (Line(points={{-16,0},{0,0},{0,-60},{20,-60}}, color={0,127,255}));
-  connect(ram.y, pro.u1) annotation (Line(points={{-75,8},{-70,8},{-70,34},{-64,34}}, color={0,0,127}));
+    annotation (Line(points={{-16,0},{0,0},{0,-70},{20,-70}}, color={0,127,255}));
+  connect(ram.y, pro.u1) annotation (Line(points={{-75,34},{-64,34}},                 color={0,0,127}));
   connect(realExpression1[1].y, pro.u2)
-    annotation (Line(points={{-33,-90},{-48,-90},{-48,22},{-64,22}}, color={0,0,127}));
-  connect(realExpression1.y, heaOrCoo1.Q_flowLoaReq)
-    annotation (Line(points={{-33,-90},{-8,-90},{-8,-52},{18,-52}}, color={0,0,127}));
+    annotation (Line(points={{-44,-79},{-68,-79},{-68,22},{-64,22}}, color={0,0,127}));
   connect(pro.y, supHea2.m_flow_in) annotation (Line(points={{-41,28},{-40,28},{-40,8},{-38,8}}, color={0,0,127}));
+  connect(realExpression7.y, heaOrCoo1.Q_flowLoaReq)
+    annotation (Line(points={{-20,-79},{-20,-62},{18,-62}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end Test;

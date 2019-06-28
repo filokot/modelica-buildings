@@ -87,12 +87,12 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
     Q_flow_nominal=Q_flowLoa_nominal,
     m_flow_nominal=m_flowLoa_nominal,
     each reverseAction=reverseAction)
-    annotation (Placement(transformation(extent={{-52,42},{-32,60}})));
-  Modelica.Blocks.Sources.RealExpression TInl[nLoa](y=fill(heaFloEps.TInl, nLoa)) "Fluid inlet temperature"
+    annotation (Placement(transformation(extent={{-60,42},{-40,60}})));
+  Modelica.Blocks.Sources.RealExpression TInlVal[nLoa](y=fill(heaFloEps.TInl, nLoa)) "Fluid inlet temperature"
     annotation (Placement(transformation(extent={{-100,54},{-80,74}})));
-  Modelica.Blocks.Sources.RealExpression cpInl[nLoa](y=fill(heaFloEps.cpInl, nLoa))
+  Modelica.Blocks.Sources.RealExpression cpInlVal[nLoa](y=fill(heaFloEps.cpInl, nLoa))
     "Fluid inlet specific heat capacity" annotation (Placement(transformation(extent={{-100,38},{-80,58}})));
-  Modelica.Blocks.Sources.RealExpression heaPorT[nLoa](y=heaPorLoa.T) "Temperature of the load"
+  Modelica.Blocks.Sources.RealExpression heaPorTVal[nLoa](y=heaPorLoa.T) "Temperature of the load"
     annotation (Placement(transformation(extent={{-100,22},{-80,42}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput Q_flowLoaReq[nLoa](quantity="HeatFlowRate")
     "Heat flow rate required to meet the load temperature setpoint" annotation (Placement(transformation(
@@ -134,24 +134,24 @@ equation
 
   connect(heaFloEps.port_b, vol.ports[1]) annotation (Line(points={{10,0},{52,0}},  color={0,127,255}));
   connect(vol.ports[2], port_b) annotation (Line(points={{48,0},{100,0}}, color={0,127,255}));
-  connect(heaFloEps.UA, UALoa.y) annotation (Line(points={{-12,-8},{-26,-8},{-26,-36},{-79,-36}}, color={0,0,127}));
+  connect(heaFloEps.UA, UALoa.y) annotation (Line(points={{-12,-8},{-20,-8},{-20,-36},{-79,-36}}, color={0,0,127}));
   connect(port_a, heaFloEps.port_a) annotation (Line(points={{-100,0},{-10,0}}, color={0,127,255}));
   connect(heaFloEps.heaPor, heaPorLoa) annotation (Line(points={{0,8},{0,100}}, color={191,0,0}));
   connect(effectivenessControl.m_flow, heaFloEps.m_flowLoa)
-    annotation (Line(points={{-31,55},{-26,55},{-26,8},{-12,8}}, color={0,0,127}));
+    annotation (Line(points={{-39,55},{-20,55},{-20,8},{-12,8}}, color={0,0,127}));
   connect(UALoa.y, effectivenessControl.UA)
-    annotation (Line(points={{-79,-36},{-70,-36},{-70,58},{-54,58}}, color={0,0,127}));
-  connect(TInl.y, effectivenessControl.TInl)
-    annotation (Line(points={{-79,64},{-68,64},{-68,50},{-54,50}}, color={0,0,127}));
+    annotation (Line(points={{-79,-36},{-70,-36},{-70,58},{-62,58}}, color={0,0,127}));
+  connect(TInlVal.y, effectivenessControl.TInl)
+    annotation (Line(points={{-79,64},{-68,64},{-68,50},{-62,50}}, color={0,0,127}));
   connect(Q_flowLoaReq, effectivenessControl.Q_flowReq)
-    annotation (Line(points={{-120,90},{-66,90},{-66,54},{-54,54}}, color={0,0,127}));
+    annotation (Line(points={{-120,90},{-66,90},{-66,54},{-62,54}}, color={0,0,127}));
   connect(m_flowReq, mulSum.y) annotation (Line(points={{110,80},{81,80}}, color={0,0,127}));
   connect(effectivenessControl.m_flow, mulSum.u)
-    annotation (Line(points={{-31,55},{40,55},{40,80},{58,80}}, color={0,0,127}));
-  connect(heaPorT.y, effectivenessControl.TLoad)
-    annotation (Line(points={{-79,32},{-66,32},{-66,42},{-54,42}},color={0,0,127}));
-  connect(cpInl.y, effectivenessControl.cpInl)
-    annotation (Line(points={{-79,48},{-72,48},{-72,46},{-54,46}},color={0,0,127}));
+    annotation (Line(points={{-39,55},{40,55},{40,80},{58,80}}, color={0,0,127}));
+  connect(heaPorTVal.y, effectivenessControl.TLoad)
+    annotation (Line(points={{-79,32},{-66,32},{-66,42},{-62,42}}, color={0,0,127}));
+  connect(cpInlVal.y, effectivenessControl.cpInl)
+    annotation (Line(points={{-79,48},{-72,48},{-72,46},{-62,46}}, color={0,0,127}));
   annotation (defaultComponentName="heaOrCoo",
  Documentation(info="<html>
  <p>

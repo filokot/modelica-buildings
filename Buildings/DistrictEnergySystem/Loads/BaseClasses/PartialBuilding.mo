@@ -56,14 +56,13 @@ partial model PartialBuilding "Partial class for building model"
     "Actual cooling heat flow rate"
     annotation (Placement(
     transformation(extent={{300,-220},{320,-200}}), iconTransformation(extent={{100,-100},{120,-80}})));
-  Modelica.Blocks.Sources.RealExpression Q_flowHea[nHeaLoa](
-    y={heaPorHea[i].Q_flow for i in 1:nHeaLoa})
+  Modelica.Blocks.Sources.RealExpression Q_flowHeaVal[nHeaLoa](y=heaPorHea.Q_flow)
     annotation (Placement(transformation(extent={{260,200},{280,220}})));
-  Modelica.Blocks.Sources.RealExpression Q_flowCoo[nCooLoa](
-    y={heaPorCoo[i].Q_flow for i in 1:nCooLoa})
+  Modelica.Blocks.Sources.RealExpression Q_flowCooVal[nCooLoa](y=heaPorCoo.Q_flow)
     annotation (Placement(transformation(extent={{260,-220},{280,-200}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE heaLoaODE[nHeaLoaO](
-    final Q_flowHea_nominal={Q_flowHea_nominal[i] for i in 1:nHeaLoaO},
+    final Q_flowHea_nominal={Q_flowHea_nominal[i] for i in heaLoaO_idx},
+    final Q_flow_nominal={Q_flowHea_nominal[i] for i in heaLoaO_idx},
     each TOutHea_nominal=268.15,
     each TIndHea_nominal=293.15) if nHeaLoaO > 0 "ODE model computing the temperature of heating load"
     annotation (Placement(transformation(extent={{-200,90},{-220,110}})));
@@ -74,8 +73,8 @@ partial model PartialBuilding "Partial class for building model"
     "Temperature of cooling load computed by ODE model"
     annotation (Placement(transformation(extent={{-240,-110},{-260,-90}})));
   FirstOrderODE cooLoaODE[nCooLoaO](
-    final Q_flowHea_nominal={Q_flowHea_nominal[i] for i in 1:nCooLoaO},
-    final Q_flow_nominal={Q_flowCoo_nominal[i] for i in 1:nCooLoaO},
+    Q_flowHea_nominal={Q_flowHea_nominal[i] for i in cooLoaO_idx},
+    final Q_flow_nominal={Q_flowCoo_nominal[i] for i in cooLoaO_idx},
     each TOutHea_nominal=268.15,
     each TIndHea_nominal=293.15) if nCooLoaO > 0 "ODE model computing the temperature of cooling load"
     annotation (Placement(transformation(extent={{-200,-110},{-220,-90}})));
@@ -112,12 +111,11 @@ protected
     {el==Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE for el in cooLoaTyp});
 equation
   for i in 1:nCooLoa loop
-    connect(Q_flowCoo[i].y, Q_flowCooAct[i])
-    annotation (Line(points={{281,-210},{292.5,-210},{292.5,-210},{310,-210}}, color={0,0,127}));
+    connect(Q_flowCooVal[i].y, Q_flowCooAct[i])
+      annotation (Line(points={{281,-210},{292.5,-210},{292.5,-210},{310,-210}}, color={0,0,127}));
   end for;
   for i in 1:nHeaLoa loop
-    connect(Q_flowHea[i].y, Q_flowHeaAct[i])
-    annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
+    connect(Q_flowHeaVal[i].y, Q_flowHeaAct[i]) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
   end for;
   if nHeaLoaO > 0 then
     for i in 1:nHeaLoaO loop
@@ -133,7 +131,7 @@ equation
       connect(heaLoaODE[i].TInd, THeaLoaODE[i].T)
         annotation (Line(points={{-221,100},{-238,100}}, color={0,0,127}));
       // Connection to I/O variables.
-      connect(Q_flowHea[heaLoaO_idx[i]].y, heaLoaODE[i].Q_flowAct)
+      connect(Q_flowHeaVal[heaLoaO_idx[i]].y, heaLoaODE[i].Q_flowAct)
         annotation (Line(points={{281,210},{288,210},{288,92},{-198,92}}, color={0,0,127}));
       connect(THeaLoaODE[i].port, heaPorHea[heaLoaO_idx[i]])
         annotation (Line(points={{-260,100},{-300,100}}, color={191,0,0}));
@@ -160,7 +158,7 @@ equation
       connect(cooLoaODE[i].TInd, TCooLoaODE[i].T)
         annotation (Line(points={{-221,-100},{-238,-100}}, color={0,0,127}));
       // Connection to I/O variables.
-      connect(Q_flowCoo[cooLoaO_idx[i]].y, cooLoaODE[i].Q_flowAct)
+      connect(Q_flowCooVal[cooLoaO_idx[i]].y, cooLoaODE[i].Q_flowAct)
         annotation (Line(points={{281,-210},{288,-210},{288,-108},{-198,-108}}, color={0,0,127}));
       connect(TCooLoaODE[i].port, heaPorCoo[cooLoaO_idx[i]])
         annotation (Line(points={{-260,-100},{-300,-100}}, color={191,0,0}));

@@ -13,8 +13,7 @@ model HeatFlowEffectivenessMult
     each quantity="ThermalConductance", each unit="W/K", each min=0) "Thermal conductance"
     annotation (Placement(transformation(extent={{-20,-20},{20,20}},
         rotation=0,
-        origin={-120,80}),
-                         iconTransformation(
+        origin={-120,80}),iconTransformation(
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,80})));
@@ -38,14 +37,19 @@ model HeatFlowEffectivenessMult
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,-80})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect effDir[nLoa] annotation (Placement(transformation(extent={{-54,62},{-34,82}})));
-  Modelica.Blocks.Sources.RealExpression TInl1[nLoa](y=fill(TInl, nLoa)) "Fluid inlet temperature"
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect effDir[nLoa]
+    annotation (Placement(transformation(extent={{-54,62},{-34,82}})));
+  Modelica.Blocks.Sources.RealExpression TInlVal[nLoa](y=fill(TInl, nLoa))
+    "Fluid inlet temperature"
     annotation (Placement(transformation(extent={{-100,40},{-80,60}})));
-  Modelica.Blocks.Sources.RealExpression cpInl1[nLoa](y=fill(cpInl, nLoa)) "Fluid inlet specific heat capacity"
+  Modelica.Blocks.Sources.RealExpression cpInlVal[nLoa](y=fill(cpInl, nLoa))
+    "Fluid inlet specific heat capacity"
     annotation (Placement(transformation(extent={{-100,26},{-80,46}})));
-  Modelica.Blocks.Sources.RealExpression heaPorT[nLoa](y=heaPor.T) "Temperature of the load"
+  Modelica.Blocks.Sources.RealExpression heaPorTVal[nLoa](y=heaPor.T)
+    "Temperature of the load"
     annotation (Placement(transformation(extent={{-100,12},{-80,32}})));
-  Modelica.Blocks.Sources.RealExpression m_flowActVal[nLoa](y=m_flowAct) "Actual mass flow rate"
+  Modelica.Blocks.Sources.RealExpression m_flowActVal[nLoa](y=m_flowAct)
+    "Actual mass flow rate"
     annotation (Placement(transformation(extent={{-100,54},{-80,74}})));
   // Parameters for inverseXRegularized.
   // These are assigned here for efficiency reason.
@@ -70,9 +74,11 @@ protected
     "Polynomial coefficient for inverseXRegularized";
   Modelica.SIunits.MassFlowRate m_flowAct[nLoa];
 equation
-  m_flowAct = noEvent(
-    if sum(m_flowLoa) < m_flow_small then fill(0, nLoa) else
-    m_flowLoa / sum(m_flowLoa) * m_flow);
+  m_flowAct = Modelica.Fluid.Utilities.regStep(
+    sum(m_flowLoa) - 2 * m_flow_small,
+    m_flowLoa / sum(m_flowLoa) * m_flow,
+    fill(0, nLoa),
+    m_flow_small);
   heaPor.Q_flow = effDir.Q_flow;
   if allowFlowReversal then
     TInl = Modelica.Fluid.Utilities.regStep(
@@ -98,9 +104,9 @@ equation
       p=port_a.p,
       T=TInl));
   connect(UA, effDir.UA) annotation (Line(points={{-120,80},{-56,80}}, color={0,0,127}));
-  connect(heaPorT.y, effDir.TLoad) annotation (Line(points={{-79,22},{-70,22},{-70,64},{-56,64}}, color={0,0,127}));
-  connect(cpInl1.y, effDir.cpInl) annotation (Line(points={{-79,36},{-72,36},{-72,68},{-56,68}}, color={0,0,127}));
-  connect(TInl1.y, effDir.TInl) annotation (Line(points={{-79,50},{-74,50},{-74,72},{-56,72}}, color={0,0,127}));
+  connect(heaPorTVal.y, effDir.TLoad) annotation (Line(points={{-79,22},{-70,22},{-70,64},{-56,64}}, color={0,0,127}));
+  connect(cpInlVal.y, effDir.cpInl) annotation (Line(points={{-79,36},{-72,36},{-72,68},{-56,68}}, color={0,0,127}));
+  connect(TInlVal.y, effDir.TInl) annotation (Line(points={{-79,50},{-74,50},{-74,72},{-56,72}}, color={0,0,127}));
   connect(m_flowActVal.y, effDir.m_flow)
     annotation (Line(points={{-79,64},{-76,64},{-76,76},{-56,76}}, color={0,0,127}));
   annotation (
