@@ -1,8 +1,7 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
 model ComputeSplitFactors
   extends Modelica.Blocks.Icons.Block;
-  parameter Integer nLoa = 1
-    "Number of connected loads";
+  parameter Integer nLoa "Number of connected loads";
   parameter Real Q_flow_small = 1;
   Buildings.Controls.OBC.CDL.Interfaces.RealInput Q_flow[nLoa](
     quantity="HeatFlowRate")

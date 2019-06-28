@@ -2,6 +2,7 @@ CouplingRC
 BaseClasses
 Ressources
 CouplingTimeSeries
-CouplingTimeSeriesInv
-CouplingTimeSeriesSplit
 CouplingRCSplit
+CouplingTimeSeriesSplit2Loads
+CouplingTimeSeriesMult2Loads
+CouplingRCMult2Loads

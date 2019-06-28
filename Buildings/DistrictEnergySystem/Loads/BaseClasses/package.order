@@ -1,13 +1,13 @@
 HeatFlowEffectiveness
-SimplifiedBuildingODE
+FirstOrderODE
 PartialBuilding
 logMeanTempDif
 Test
-HeatingOrCoolingVec
 HeatingOrCooling
 EffectivenessDirect
-TestInverse
-EffectivenessInverse
 HeatingOrCoolingSplit
 ThermSplitterInput
 ComputeSplitFactors
+EffectivenessControl
+HeatingOrCoolingMult
+HeatFlowEffectivenessMult

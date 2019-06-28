@@ -2,8 +2,8 @@ within Buildings.DistrictEnergySystem.Loads.BaseClasses;
 model ThermSplitterInput
   "A simple model which weights a given set of thermal inputs to calculate an average temperature and aggregated heat flow per output"
 
-  parameter Integer nOut "Number of splitter outputs";
-  parameter Integer nIn "Number of splitter inputs";
+  parameter Integer nOut = 1 "Number of splitter outputs";
+  parameter Integer nIn = 1 "Number of splitter inputs";
 
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a portIn[nIn]
     "Single thermal input"
