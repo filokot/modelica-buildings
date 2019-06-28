@@ -24,7 +24,7 @@ model EffectivenessControl
           "PID controller" annotation (Placement(transformation(extent={{-50,50},{-30,70}})));
   Controls.OBC.CDL.Continuous.Gain           mFloReq(k=m_flow_nominal)
     annotation (Placement(transformation(extent={{-8,50},{12,70}})));
-  EffectivenessDirect effectivenessDirect annotation (Placement(transformation(extent={{64,46},{84,66}})));
+  EffectivenessDirect effDir annotation (Placement(transformation(extent={{64,46},{84,66}})));
   Controls.OBC.CDL.Interfaces.RealInput UA(
     quantity="ThermalConductance",
     unit="W/K",
@@ -64,7 +64,7 @@ model EffectivenessControl
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,-80})));
-  Controls.OBC.CDL.Interfaces.RealInput Q_flow(quantity="HeatFlowRate") "Heat flow rate"       annotation (Placement(
+  Controls.OBC.CDL.Interfaces.RealInput Q_flowReq(quantity="HeatFlowRate") "Heat flow rate" annotation (Placement(
         transformation(
         extent={{-20,-20},{20,20}},
         rotation=0,
@@ -83,20 +83,15 @@ equation
                                                                             color={0,0,127}));
   connect(gai2.y, conPID.u_s) annotation (Line(points={{-63,60},{-52,60}}, color={0,0,127}));
   connect(conPID.u_m, gai1.y) annotation (Line(points={{-40,48},{-40,39}}, color={0,0,127}));
-  connect(UA, effectivenessDirect.UA) annotation (Line(points={{-120,90},{50,90},{50,64},{62,64}}, color={0,0,127}));
-  connect(effectivenessDirect.Q_flow, gai1.u)
-    annotation (Line(points={{85,56},{88,56},{88,0},{-40,0},{-40,16}},     color={0,0,127}));
-  connect(Q_flow, gai2.u) annotation (Line(points={{-120,50},{-94,50},{-94,60},{-86,60}}, color={0,0,127}));
-  connect(mFloReq.y, effectivenessDirect.m_flow) annotation (Line(points={{13,60},{26,60},{38,60},{62,60}},
-                                                                                            color={0,0,127}));
+  connect(UA, effDir.UA) annotation (Line(points={{-120,90},{50,90},{50,64},{62,64}}, color={0,0,127}));
+  connect(effDir.Q_flow, gai1.u) annotation (Line(points={{85,56},{88,56},{88,0},{-40,0},{-40,16}}, color={0,0,127}));
+  connect(Q_flowReq, gai2.u) annotation (Line(points={{-120,50},{-94,50},{-94,60},{-86,60}}, color={0,0,127}));
+  connect(mFloReq.y, effDir.m_flow) annotation (Line(points={{13,60},{26,60},{38,60},{62,60}}, color={0,0,127}));
   connect(mFloReq.y, m_flow) annotation (Line(points={{13,60},{40,60},{40,40},{110,40}}, color={0,0,127}));
-  connect(cpInl, effectivenessDirect.cpInl)
-    annotation (Line(points={{-120,-30},{54,-30},{54,52},{62,52}}, color={0,0,127}));
-  connect(TLoad, effectivenessDirect.TLoad)
-    annotation (Line(points={{-120,-70},{56,-70},{56,48},{62,48}}, color={0,0,127}));
-  connect(effectivenessDirect.Q_flow, Q_flowAct)
-    annotation (Line(points={{85,56},{88,56},{88,-40},{110,-40}}, color={0,0,127}));
-  connect(TInl, effectivenessDirect.TInl)
+  connect(cpInl, effDir.cpInl) annotation (Line(points={{-120,-30},{54,-30},{54,52},{62,52}}, color={0,0,127}));
+  connect(TLoad, effDir.TLoad) annotation (Line(points={{-120,-70},{56,-70},{56,48},{62,48}}, color={0,0,127}));
+  connect(effDir.Q_flow, Q_flowAct) annotation (Line(points={{85,56},{88,56},{88,-40},{110,-40}}, color={0,0,127}));
+  connect(TInl, effDir.TInl)
     annotation (Line(points={{-120,10},{-80,10},{-80,-10},{52,-10},{52,56},{62,56}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-80},{100,100}})),
                                                                  Diagram(coordinateSystem(preserveAspectRatio=false, extent={

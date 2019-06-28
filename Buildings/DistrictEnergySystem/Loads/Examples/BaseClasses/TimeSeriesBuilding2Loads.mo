@@ -6,9 +6,9 @@ model TimeSeriesBuilding2Loads "Building model from time series"
     final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE},
     nHeaLoa=2,
     final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE,Buildings.DistrictEnergySystem.Loads.Types.ModelType.PrescribedT},
+    Q_flowCoo_nominal={2000},
+    Q_flowHea_nominal={500,1000});
 
-    Q_flowHea_nominal={400,1000},
-    Q_flowCoo_nominal={2000});
   Modelica.Blocks.Sources.CombiTimeTable loa(
     tableOnFile=true,
     columns={2,3},
@@ -32,8 +32,12 @@ model TimeSeriesBuilding2Loads "Building model from time series"
     amplitude=500,
     freqHz=1/86400,
     offset=500) annotation (Placement(transformation(extent={{0,30},{20,50}})));
-  Modelica.Blocks.Sources.RealExpression realExpression1(y=273.15 + 25)
-    annotation (Placement(transformation(extent={{-188,40},{-208,60}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Sine sin1(
+    freqHz=1/86400,
+    amplitude=2,
+    offset=25)  annotation (Placement(transformation(extent={{-160,40},{-180,60}})));
+  Buildings.Controls.OBC.UnitConversions.From_degC from_degC4
+    annotation (Placement(transformation(extent={{-200,40},{-220,60}})));
 equation
   connect(Q_flowHea.y, Q_flowHeaAct) annotation (Line(points={{281,210},{310,210}}, color={0,0,127}));
   connect(TCooLoaODE.T, cooLoaODE.TInd) annotation (Line(points={{-238,-100},{-221,-100}}, color={0,0,127}));
@@ -50,7 +54,8 @@ equation
     annotation (Line(points={{21,0},{80,0},{80,97},{-198,97}}, color={0,0,127}));
   connect(loa.y[2], Q_flowHeaReq[1]) annotation (Line(points={{21,0},{172,0},{172,95},{310,95}}, color={0,0,127}));
   connect(sin.y, Q_flowHeaReq[2]) annotation (Line(points={{21,40},{162,40},{162,105},{310,105}}, color={0,0,127}));
-  connect(realExpression1.y, preTHeaLoa[1].T) annotation (Line(points={{-209,50},{-238,50}}, color={0,0,127}));
+  connect(sin1.y, from_degC4.u) annotation (Line(points={{-181,50},{-198,50}}, color={0,0,127}));
+  connect(from_degC4.y, preTHeaLoa[1].T) annotation (Line(points={{-221,50},{-238,50}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
 end TimeSeriesBuilding2Loads;

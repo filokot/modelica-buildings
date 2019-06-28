@@ -7,15 +7,12 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
 
   parameter Integer nLoa = 1
     "Number of connected loads";
-
   parameter Modelica.SIunits.Time tau = 30
     "Time constant at nominal flow (if energyDynamics <> SteadyState)"
      annotation (Dialog(tab = "Dynamics", group="Nominal condition"));
-
   // Advanced
   parameter Boolean homotopyInitialization = true "= true, use homotopy method"
     annotation(Evaluate=true, Dialog(tab="Advanced"));
-
   parameter Modelica.SIunits.PressureDifference dp_nominal=0
     "Pressure difference at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
@@ -38,7 +35,8 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
     each displayUnit="degC")
     "Representative temperature of the load at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
-
+  parameter Boolean reverseAction = false
+    "Set to true for throttling the water flow rate through a cooling coil controller";
   Buildings.Fluid.MixingVolumes.MixingVolume vol(
     redeclare package Medium=Medium,
     final m_flow_nominal=m_flow_nominal,
@@ -53,7 +51,8 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
     final C_start=C_start,
     final use_C_flow=false,
     final prescribedHeatFlowRate=true,
-    nPorts=2)          "Volume of fluid"
+    final nPorts=2)
+    "Volume of fluid"
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=180,
@@ -68,9 +67,8 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
    final nLoa=nLoa,
    final m_flow_nominal=m_flow_nominal,
    final homotopyInitialization=homotopyInitialization,
-    dp_nominal=dp_nominal) "Compute the heat transfer with each load"
+   final dp_nominal=dp_nominal) "Compute the heat transfer with each load"
    annotation (Placement(transformation(extent={{-10,10},{10,-10}})));
-
   Modelica.Blocks.Sources.RealExpression UALoa[nLoa](y=UALoa_nominal) "Thermal conductance"
     annotation (Placement(transformation(extent={{-100,-46},{-80,-26}})));
   final parameter Modelica.SIunits.ThermalConductance UA_nominal = sum(
@@ -96,7 +94,7 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
     "Fluid inlet specific heat capacity" annotation (Placement(transformation(extent={{-100,38},{-80,58}})));
   Modelica.Blocks.Sources.RealExpression heaPorT[nLoa](y=heaPorLoa.T) "Temperature of the load"
     annotation (Placement(transformation(extent={{-100,22},{-80,42}})));
-  Controls.OBC.CDL.Interfaces.RealInput Q_flowLoaReq[nLoa](quantity="HeatFlowRate")
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput Q_flowLoaReq[nLoa](quantity="HeatFlowRate")
     "Heat flow rate required to meet the load temperature setpoint" annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         rotation=0,
@@ -104,13 +102,16 @@ model HeatingOrCoolingMult "Model for static heat transfer between a circulating
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,80})));
-  Controls.OBC.CDL.Interfaces.RealOutput m_flowReq(quantity="MassFlowRate")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput m_flowReq(quantity="MassFlowRate")
     "Total mass flow rate to provide the required heat flow rates"
     annotation (Placement(transformation(extent={{100,70},{120,90}}), iconTransformation(extent={{100,70},{120,90}})));
-  Controls.OBC.CDL.Continuous.MultiSum mulSum(nin=nLoa) "Sum the mass flow rates of all loads"
-                                                        annotation (Placement(transformation(extent={{60,70},{80,90}})));
-  parameter Boolean reverseAction = false
-    "Set to true for throttling the water flow rate through a cooling coil controller";
+  Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum(nin=nLoa) "Sum the mass flow rates of all loads"
+    annotation (Placement(transformation(extent={{60,70},{80,90}})));
+
+  // FOR DEVELOPMENT ONLY
+  Real frac_Q_flow "Positive fractional heat flow rate";
+  // FOR DEVELOPMENT ONLY
+
 protected
   parameter Modelica.SIunits.SpecificHeatCapacity cp_nominal=
     Medium.specificHeatCapacityCp(
@@ -126,6 +127,11 @@ protected
   parameter Modelica.SIunits.SpecificEnthalpy h_outflow_start = Medium.specificEnthalpy(sta_start)
     "Start value for outflowing enthalpy";
 equation
+
+  // FOR DEVELOPMENT ONLY
+  frac_Q_flow = abs(heaFloEps.Q_flow / Q_flow_nominal);
+  // FOR DEVELOPMENT ONLY
+
   connect(heaFloEps.port_b, vol.ports[1]) annotation (Line(points={{10,0},{52,0}},  color={0,127,255}));
   connect(vol.ports[2], port_b) annotation (Line(points={{48,0},{100,0}}, color={0,127,255}));
   connect(heaFloEps.UA, UALoa.y) annotation (Line(points={{-12,-8},{-26,-8},{-26,-36},{-79,-36}}, color={0,0,127}));
@@ -137,16 +143,15 @@ equation
     annotation (Line(points={{-79,-36},{-70,-36},{-70,58},{-54,58}}, color={0,0,127}));
   connect(TInl.y, effectivenessControl.TInl)
     annotation (Line(points={{-79,64},{-68,64},{-68,50},{-54,50}}, color={0,0,127}));
-  connect(Q_flowLoaReq, effectivenessControl.Q_flow)
+  connect(Q_flowLoaReq, effectivenessControl.Q_flowReq)
     annotation (Line(points={{-120,90},{-66,90},{-66,54},{-54,54}}, color={0,0,127}));
   connect(m_flowReq, mulSum.y) annotation (Line(points={{110,80},{81,80}}, color={0,0,127}));
   connect(effectivenessControl.m_flow, mulSum.u)
-    annotation (Line(points={{-31,55},{40,55},{40,80},{58,80}},
-                                                              color={0,0,127}));
-  connect(heaPorT.y, effectivenessControl.TLoad) annotation (Line(points={{-79,32},{-66,32},{-66,42},{-54,42}},
-                                                                                              color={0,0,127}));
+    annotation (Line(points={{-31,55},{40,55},{40,80},{58,80}}, color={0,0,127}));
+  connect(heaPorT.y, effectivenessControl.TLoad)
+    annotation (Line(points={{-79,32},{-66,32},{-66,42},{-54,42}},color={0,0,127}));
   connect(cpInl.y, effectivenessControl.cpInl)
-    annotation (Line(points={{-79,48},{-72,48},{-72,46},{-54,46}}, color={0,0,127}));
+    annotation (Line(points={{-79,48},{-72,48},{-72,46},{-54,46}},color={0,0,127}));
   annotation (defaultComponentName="heaOrCoo",
  Documentation(info="<html>
  <p>

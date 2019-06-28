@@ -57,7 +57,7 @@ model CouplingRCMult2Loads "Example illustrating the coupling of a RC building m
     nLoa=2,
     T_a_nominal=318.15,
     T_b_nominal=313.15,
-    Q_flowLoa_nominal=bui.Q_flowHea_nominal)
+    Q_flowLoa_nominal={0.4,0.9} .* bui.Q_flowHea_nominal)
             annotation (Placement(transformation(extent={{0,36},{20,20}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCoolingMult  couCoo(
     redeclare package Medium = Medium,
@@ -96,6 +96,6 @@ equation
     annotation (Line(points={{21,-82},{40,-82},{40,-120},{-60,-120},{-60,-82},{-42,-82}},     color={0,0,127}));
   annotation (Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-140},{140,80}})),
-    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
+    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRCMult2Loads.mos"
         "Simulate and plot"));
 end CouplingRCMult2Loads;
