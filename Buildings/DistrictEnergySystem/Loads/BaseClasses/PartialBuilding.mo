@@ -6,6 +6,14 @@ partial model PartialBuilding "Partial class for building model"
   parameter Modelica.SIunits.HeatFlowRate Q_flowCoo_nominal[nCooLoa]
     "Cooling power at nominal conditions (always positive)"
     annotation(Dialog(group = "Nominal condition"));
+  parameter Modelica.SIunits.ThermodynamicTemperature THeaLoa_nominal[nHeaLoa](
+    each displayUnit="degC") = fill(Modelica.SIunits.Conversions.from_degC(20), nHeaLoa)
+    "Temperature of heating load at nominal conditions"
+    annotation(Dialog(group = "Nominal condition"));
+  parameter Modelica.SIunits.ThermodynamicTemperature TCooLoa_nominal[nCooLoa](
+    each displayUnit="degC") = fill(Modelica.SIunits.Conversions.from_degC(24), nCooLoa)
+    "Temperature of cooling load at nominal conditions"
+    annotation(Dialog(group = "Nominal condition"));
 
   parameter Integer nHeaLoa = 1
     "Number of heating loads";
@@ -61,24 +69,26 @@ partial model PartialBuilding "Partial class for building model"
   Modelica.Blocks.Sources.RealExpression Q_flowCooVal[nCooLoa](y=heaPorCoo.Q_flow)
     annotation (Placement(transformation(extent={{260,-220},{280,-200}})));
   Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE heaLoaODE[nHeaLoaO](
-    final Q_flowHea_nominal={Q_flowHea_nominal[i] for i in heaLoaO_idx},
-    final Q_flow_nominal={Q_flowHea_nominal[i] for i in heaLoaO_idx},
-    each TOutHea_nominal=268.15,
-    each TIndHea_nominal=293.15) if nHeaLoaO > 0 "ODE model computing the temperature of heating load"
+    final Q_flowHea_nominal=Q_flowHea_nominal[heaLoaO_idx],
+    final Q_flow_nominal=Q_flowHea_nominal[heaLoaO_idx],
+    final TIndHea_nominal=THeaLoa_nominal[heaLoaO_idx],
+    each TOutHea_nominal=268.15) if nHeaLoaO > 0
+    "ODE model computing the temperature of heating load"
     annotation (Placement(transformation(extent={{-200,90},{-220,110}})));
   Buildings.HeatTransfer.Sources.PrescribedTemperature THeaLoaODE[nHeaLoaO] if nHeaLoaO > 0
     "Temperature of heating load computed by ODE model"
     annotation (Placement(transformation(extent={{-240,90},{-260,110}})));
-  HeatTransfer.Sources.PrescribedTemperature TCooLoaODE[nHeaLoaO] if nCooLoaO > 0
+  Buildings.HeatTransfer.Sources.PrescribedTemperature TCooLoaODE[nHeaLoaO] if nCooLoaO > 0
     "Temperature of cooling load computed by ODE model"
     annotation (Placement(transformation(extent={{-240,-110},{-260,-90}})));
-  FirstOrderODE cooLoaODE[nCooLoaO](
-    Q_flowHea_nominal={Q_flowHea_nominal[i] for i in cooLoaO_idx},
-    final Q_flow_nominal={Q_flowCoo_nominal[i] for i in cooLoaO_idx},
-    each TOutHea_nominal=268.15,
-    each TIndHea_nominal=293.15) if nCooLoaO > 0 "ODE model computing the temperature of cooling load"
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE cooLoaODE[nCooLoaO](
+    Q_flowHea_nominal=Q_flowHea_nominal[cooLoaO_idx],
+    final Q_flow_nominal=Q_flowCoo_nominal[cooLoaO_idx],
+    TIndHea_nominal=THeaLoa_nominal[cooLoaO_idx],
+    each TOutHea_nominal=268.15) if nCooLoaO > 0
+    "ODE model computing the temperature of cooling load"
     annotation (Placement(transformation(extent={{-200,-110},{-220,-90}})));
-  HeatTransfer.Sources.PrescribedTemperature preTCooLoa[nCooLoaT] if nCooLoaT > 0
+  Buildings.HeatTransfer.Sources.PrescribedTemperature preTCooLoa[nCooLoaT] if nCooLoaT > 0
     "Prescribed temperature of cooling load"
     annotation (Placement(transformation(extent={{-240,-60},{-260,-40}})));
   Buildings.HeatTransfer.Sources.PrescribedTemperature preTHeaLoa[nHeaLoaT] if nHeaLoaT > 0

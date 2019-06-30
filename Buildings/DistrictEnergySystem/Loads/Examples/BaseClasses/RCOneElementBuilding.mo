@@ -2,10 +2,12 @@ within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
 model RCOneElementBuilding "Building model of type RC one element"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
-    final nHeaLoa=1,
     final nCooLoa=1,
-    final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort},
-    final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort});
+    final cooLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort},
+    Q_flowHea_nominal={500,1000},
+    Q_flowCoo_nominal={2000},
+    final nHeaLoa=2,
+    final heaLoaTyp={Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort,Buildings.DistrictEnergySystem.Loads.Types.ModelType.ODE});
   Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez
                                                    HDifTil[2](
     each outSkyCon=true,
@@ -128,7 +130,6 @@ model RCOneElementBuilding "Building model of type RC one element"
     controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
     reverseAction=false,
     yMin=0,
-    initType=Buildings.Controls.OBC.CDL.Types.Init.InitialOutput,
     Ti=120) "PID controller for minimum temperature"
     annotation (Placement(transformation(extent={{-60,120},{-40,140}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conPIDMax(
@@ -142,6 +143,10 @@ model RCOneElementBuilding "Building model of type RC one element"
     annotation (Placement(transformation(extent={{-20,120},{0,140}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gai1(k=-Q_flowCoo_nominal[1])
     annotation (Placement(transformation(extent={{-20,-140},{0,-120}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Sine sin(
+    amplitude=500,
+    freqHz=1/86400,
+    offset=500) annotation (Placement(transformation(extent={{-10,170},{10,190}})));
 equation
   connect(eqAirTemp.TEqAirWin,preTem1. T)
     annotation (Line(
@@ -268,12 +273,17 @@ equation
   connect(conPIDMinT.y, gai.u) annotation (Line(points={{-39,130},{-22,130}}, color={0,0,127}));
   connect(conPIDMax.y, gai1.u) annotation (Line(points={{-39,-130},{-22,-130}}, color={0,0,127}));
   connect(heaPorHea[1], thermalZoneOneElement.intGainsConv)
-    annotation (Line(points={{-300,100},{-282,100},{-282,12},{92,12}}, color={191,0,0}));
+    annotation (Line(points={{-300,95},{-282,95},{-282,12},{92,12}},   color={191,0,0}));
   connect(heaPorCoo[1], thermalZoneOneElement.intGainsConv)
     annotation (Line(points={{-300,-100},{-282,-100},{-282,12},{92,12}}, color={191,0,0}));
-  connect(gai.y, Q_flowHeaReq[1]) annotation (Line(points={{1,130},{152,130},{152,100},{310,100}}, color={0,0,127}));
+  connect(from_degC1.y, heaLoaODE[1].TSet)
+    annotation (Line(points={{-79,130},{-70,130},{-70,102.8},{-198,102.8}}, color={0,0,127}));
+  connect(sin.y, heaLoaODE[1].Q_flowReq)
+    annotation (Line(points={{11,180},{39.5,180},{39.5,97},{-198,97}}, color={0,0,127}));
+  connect(gai.y, Q_flowHeaReq[1]) annotation (Line(points={{1,130},{150,130},{150,95},{310,95}}, color={0,0,127}));
   connect(gai1.y, Q_flowCooReq[1])
-    annotation (Line(points={{1,-130},{154,-130},{154,-100},{310,-100}}, color={0,0,127}));
+    annotation (Line(points={{1,-130},{152,-130},{152,-100},{310,-100}}, color={0,0,127}));
+  connect(sin.y, Q_flowHeaReq[2]) annotation (Line(points={{11,180},{158,180},{158,105},{310,105}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
 end RCOneElementBuilding;

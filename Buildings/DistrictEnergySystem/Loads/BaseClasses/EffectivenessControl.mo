@@ -74,7 +74,7 @@ model EffectivenessControl
         origin={-120,40})));
   Controls.OBC.CDL.Interfaces.RealOutput m_flow(quantity="MassFlowRate") "Mass flow rate"
     annotation (Placement(transformation(extent={{100,30},{120,50}}), iconTransformation(extent={{100,40},{120,60}})));
-  Controls.OBC.CDL.Interfaces.RealOutput Q_flowAct(quantity="HeatFlowRate") "Heat flow rate" annotation (Placement(
+  Controls.OBC.CDL.Interfaces.RealOutput Q_flow(quantity="HeatFlowRate") "Heat flow rate" annotation (Placement(
         transformation(extent={{100,-50},{120,-30}}), iconTransformation(extent={{100,-60},{120,-40}})));
   parameter Boolean reverseAction=false
     "Set to true for throttling the water flow rate through a cooling coil controller";
@@ -90,10 +90,11 @@ equation
   connect(mFloReq.y, m_flow) annotation (Line(points={{13,60},{40,60},{40,40},{110,40}}, color={0,0,127}));
   connect(cpInl, effDir.cpInl) annotation (Line(points={{-120,-30},{54,-30},{54,52},{62,52}}, color={0,0,127}));
   connect(TLoad, effDir.TLoad) annotation (Line(points={{-120,-70},{56,-70},{56,48},{62,48}}, color={0,0,127}));
-  connect(effDir.Q_flow, Q_flowAct) annotation (Line(points={{85,56},{88,56},{88,-40},{110,-40}}, color={0,0,127}));
+  connect(effDir.Q_flow, Q_flow) annotation (Line(points={{85,56},{88,56},{88,-40},{110,-40}}, color={0,0,127}));
   connect(TInl, effDir.TInl)
     annotation (Line(points={{-120,10},{-80,10},{-80,-10},{52,-10},{52,56},{62,56}}, color={0,0,127}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-80},{100,100}})),
+  annotation (
+  Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-80},{100,100}})),
                                                                  Diagram(coordinateSystem(preserveAspectRatio=false, extent={
             {-100,-80},{100,100}})));
 end EffectivenessControl;

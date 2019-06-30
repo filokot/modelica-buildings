@@ -1,13 +1,6 @@
-HeatingOrCoolingMult
 HeatingOrCooling
-HeatingOrCoolingSplit
-HeatFlowEffectivenessMult
 HeatFlowEffectiveness
 FirstOrderODE
 EffectivenessDirect
 EffectivenessControl
 PartialBuilding
-logMeanTempDif
-ThermSplitterInput
-ComputeSplitFactors
-Test

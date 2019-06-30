@@ -1,8 +1,5 @@
-CouplingTimeSeriesMult2Loads
-CouplingRCMult2Loads
-CouplingRC
 CouplingTimeSeries
-CouplingRCSplit
-CouplingTimeSeriesSplit2Loads
+CouplingRC
 BaseClasses
 Ressources
+CouplingGeojsonExport

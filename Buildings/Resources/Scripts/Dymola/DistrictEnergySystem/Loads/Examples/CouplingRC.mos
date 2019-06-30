@@ -6,7 +6,7 @@ simulateModel("Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC",
 createPlot(
     id=1,
     position={10, 20, 670, 900},
-    y={"bui.maxTSet.y", "bui.minTSet.y", "bui.thermalZoneOneElement.TAir"},
+    y={"bui.maxTSet.y", "bui.minTSet.y", "bui.heaPorHea[1].T", "bui.heaPorHea[2].T"},
     autoscale=true,
     // autoerase=true,
     // autoreplot=true,
@@ -14,13 +14,13 @@ createPlot(
 );
 createPlot(
     id=1,
-    y={"mFloCoo.y", "mFloHea.y"},
+    y={"bui.Q_flowHeaReq[1]", "bui.Q_flowHeaReq[2]", "bui.heaPorHea[1].Q_flow", "bui.heaPorHea[2].Q_flow"},
     grid=true,
     subPlot=2
 );
 createPlot(
     id=1,
-    y={"couCoo.heaFloEps.Q_flow", "couHea.heaFloEps.Q_flow"},
+    y={"bui.Q_flowCooReq[1]", "bui.heaPorCoo[1].Q_flow"},
     grid=true,
     subPlot=3
 );
@@ -35,23 +35,17 @@ createPlot(
 );
 createPlot(
     id=2,
-    y={"mFloHea.y", "couHea.m_flow_nominal"},
+    y={"couHea.m_flow", "couHea.m_flow_nominal"},
     grid=true,
     subPlot=2
 );
 createPlot(
     id=2,
-    y={"couHea.vol.heatPort.Q_flow"},
+    y={"couHea.heaPorLoa[1].Q_flow", "couHea.heaPorLoa[2].Q_flow"},
     grid=true,
     subPlot=3
 );
 plotExpression(apply(-1*CouplingRC[end].couHea.Q_flow_nominal), false, "-1*couHea.Q_flow_nominal", 2);
-createPlot(
-    id=2,
-    y={"bui.yHea", "couHea.frac_Q_flow"},
-    grid=true,
-    subPlot=4
-);
 createPlot(
     id=3,
     position={1300, 20, 670, 900},
@@ -63,22 +57,17 @@ createPlot(
 );
 createPlot(
     id=3,
-    y={"mFloCoo.y", "couCoo.m_flow_nominal"},
+    y={"couCoo.m_flow", "couCoo.m_flow_nominal"},
     grid=true,
     subPlot=2
 );
 createPlot(
     id=3,
-    y={"couCoo.vol.heatPort.Q_flow", "couCoo.Q_flow_nominal"},
+    y={"couCoo.heaPorLoa[1].Q_flow", "couCoo.Q_flow_nominal"},
     grid=true,
     subPlot=3
 );
-createPlot(
-    id=3,
-    y={"bui.yCoo", "couCoo.frac_Q_flow"},
-    grid=true,
-    subPlot=4
-);
+
 createPlot(
     id=4,
     position={650, 260, 650, 400},
