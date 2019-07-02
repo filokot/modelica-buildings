@@ -80,7 +80,7 @@ equation
   </p>
   <p>
   where 
-  <i>Q&#775;<sub>heat_cool, req</sub></i> is the required heating or cooling heat transfer rate and 
+  <i>Q&#775;<sub>heat_cool, req</sub></i> is the required heating or cooling heat flow rate and 
   <i>Q&#775;<sub>various</sub></i> represent the miscellaneous heat gains.
   The indoor temperature variation rate due to an unmet load is given by: 
   </p>
@@ -90,7 +90,7 @@ equation
   </p>
   <p>
   where 
-  <i>Q&#775;<sub>heat_cool, act</sub></i> is the actual heating or cooling heat transfer rate and 
+  <i>Q&#775;<sub>heat_cool, act</sub></i> is the actual heating or cooling heat flow rate and 
   <i>C</i> (J/K) is the thermal capacitance of the indoor volume.
   The two previous equations lead to:  
   </p>

@@ -116,7 +116,7 @@ equation
   This model approximates the inverse of 
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect\">
   Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect</a> by means of a control 
-  loop tracking a prescribed heat flow rate and outputing the required mass flow rate.
+  loop tracking the heat flow rate and outputing the required mass flow rate.
   </p>
   </html>"),
   Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-80},{100,100}})),

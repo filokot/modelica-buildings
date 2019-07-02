@@ -145,7 +145,7 @@ equation
   <i>m&#775;<sub>input, i</sub></i> is the mass flow rate provided as an input for each load.
   </p>
   <p>
-  <i><i>UA<sub>i</sub></i></i> is computed for each load using the following equations:
+  The thermal conductance <i><i>UA<sub>i</sub></i></i> is computed for each load using the following equations:
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
   1 / UA<sub>i</sub> = 1 / UA<sub>int, i</sub> + 1 / UA<sub>ext, i</sub>
