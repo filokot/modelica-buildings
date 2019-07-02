@@ -194,8 +194,8 @@ equation
   specify a method to compute the temperature of the load. The following predefined types are implemented:
     <ul>
     <li>
-    Thermal model with heat port: the derived model provides the systems of equation to compute the load 
-    temperature and exposes it through a heat port. This heat port must be connected to the heat ports of the 
+    Thermal model with heat port: the derived model provides the system of equations to compute the load 
+    temperature which is exposed through a heat port. This heat port must be connected to the heat ports of the 
     partial model in order to transfer the sensible heat flow rate from the water loop to the load. 
     See <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC\">
     Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC</a> for a typical example.   
@@ -219,15 +219,16 @@ equation
     </ul>
   </li>
   <li> 
-  provide the heating and cooling heat flow rate required for maintaining the load temperature setpoint. The
+  provide the heating and cooling heat flow rate required to maintain the load temperature setpoint. The
   corresponding variables must be connected to the output connectors <code>Q_flowHeaReq</code> and 
   <code>Q_flowCooReq</code>.
   </li>
   </ul>
   <p>
   The other output connectors <code>Q_flowHeaAct</code> and <code>Q_flowCooAct</code> correspond to the actual 
-  heat flow rates exchanged with the water loop. 
-  They are provided as a simple means of accessing the heat flow rate of each heat port from a higher level model. 
+  heat flow rates exchanged with the water loops. 
+  They are provided as a simple means of accessing the heat flow rate of each heat port from a higher level of
+  composition. 
   </p>
   </html>"),
   Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100}, {100,100}})),

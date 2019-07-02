@@ -82,7 +82,7 @@ equation
   where 
   <i>Q&#775;<sub>heat_cool, req</sub></i> is the required heating or cooling heat transfer rate and 
   <i>Q&#775;<sub>various</sub></i> represent the miscellaneous heat gains.
-  The indoor temperature variation due to an unmet load is given by: 
+  The indoor temperature variation rate due to an unmet load is given by: 
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
   C * &part;T<sub>ind</sub> / &part;t = Q&#775;<sub>heat_cool, act</sub> + 

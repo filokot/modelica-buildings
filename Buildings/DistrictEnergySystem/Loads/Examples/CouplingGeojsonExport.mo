@@ -119,7 +119,7 @@ equation
   to transfer heat from a fluid stream to a simplified multizone RC model resulting 
   from the translation of a GeoJSON model specified within Urbanopt UI, see  
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExportBuilding\">
-  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExportBuilding</a>    
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExportBuilding</a>.    
   </p>
   </html>"),
   Diagram(

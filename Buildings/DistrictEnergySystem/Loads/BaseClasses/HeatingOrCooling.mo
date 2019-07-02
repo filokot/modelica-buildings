@@ -162,7 +162,7 @@ equation
   thermal loads at uniform temperature.
   </p>
   <p>
-  The heat flow rate transferred to each load is computed based on the effectiveness, see 
+  The heat flow rate transferred to each load is computed using the effectiveness method, see 
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowEffectiveness\">
   Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatFlowEffectiveness</a>.
   As the effectiveness depends on the mass flow rate, this requires to assess a representative distribution of 
@@ -172,7 +172,7 @@ equation
   <li> computing the mass flow rate needed to transfer the required heat flow rate to each load, 
   see 
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessControl\">
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessControl</a>.
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessControl</a>,
   </li>
   <li> normalizing this mass flow rate to the actual flow rate of the main fluid stream.</li>
   </ul>

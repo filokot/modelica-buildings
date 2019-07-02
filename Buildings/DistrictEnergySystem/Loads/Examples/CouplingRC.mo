@@ -115,7 +115,7 @@ equation
   to transfer heat from a fluid stream to a simplified building model consisting in two heating loads and one cooling 
   load as described in
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding\">
-  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding</a>    
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding</a>. 
   </p>
   </html>"),
   Diagram(

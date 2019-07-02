@@ -127,7 +127,7 @@ equation
   idealized thermal loads at uniform temperature.
   </p>
   <p>
-  The heat flow rate transferred to each load <i>i</i> is computed based on the effectiveness method, 
+  The heat flow rate transferred to each load <i>i</i> is computed using the effectiveness method, 
   see 
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect\">
   Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect</a>.
@@ -137,7 +137,7 @@ equation
   specific heat capacity (similar for all loads) and a mass flow rate equal to:
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
-  m&#775;<sub>i</sub> = m&#775; * m&#775;<sub>input, i</sub> / &Sigma;<sub>i</sub> m&#775;<sub>input, i</sub>,
+  m&#775;<sub>i</sub> = m&#775; * m&#775;<sub>input, i</sub> / &Sigma;<sub>i</sub> m&#775;<sub>input, i</sub>
   </p>
   <p>
   where 
@@ -155,7 +155,7 @@ equation
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
   UA<sub>int, i</sub> = UA<sub>int, nom, i</sub> * (m&#775;<sub>i</sub> / 
-  m&#775;<sub>nom, i</sub>)<sup>expUAi</sup>.
+  m&#775;<sub>nom, i</sub>)<sup>expUAi</sup>
   </p>
   <p>
   The last equation providing the UA-value on the fluid side is derived from a forced convection 

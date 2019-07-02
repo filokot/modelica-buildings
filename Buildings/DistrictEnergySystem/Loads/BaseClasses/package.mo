@@ -93,7 +93,7 @@ protected
   effectiveness method:
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
-  Q&#775; = &epsilon; * C<sub>min</sub> * (T<sub>inl</sub> - T<sub>load</sub>),
+  Q&#775; = &epsilon; * C<sub>min</sub> * (T<sub>inl</sub> - T<sub>load</sub>)
   </p>
   <p>
   where 
@@ -108,7 +108,7 @@ protected
   the effectiveness comes down to:
   </p>
   <p align=\"center\" style=\"font-style:italic;\">
-  &epsilon; = 1 - exp(-UA / C<sub>min</sub>),
+  &epsilon; = 1 - exp(-UA / C<sub>min</sub>)
   </p>
   <p>
   where <i>UA</i> is the overall uniform thermal conductance.
