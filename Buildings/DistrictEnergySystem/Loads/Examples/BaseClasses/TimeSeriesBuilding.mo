@@ -1,5 +1,6 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model TimeSeriesBuilding "Building model from time series"
+model TimeSeriesBuilding
+  "Building model where heating and cooling loads are provided by time series and time functions"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
     nCooLoa=1,
@@ -58,6 +59,31 @@ equation
   connect(sin.y, Q_flowHeaReq[2]) annotation (Line(points={{21,40},{162,40},{162,105},{310,105}}, color={0,0,127}));
   connect(sin1.y, from_degC4.u) annotation (Line(points={{-181,50},{-198,50}}, color={0,0,127}));
   connect(from_degC4.y, preTHeaLoa[1].T) annotation (Line(points={{-221,50},{-238,50}}, color={0,0,127}));
-  annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
+  annotation (
+  Documentation(info="<html>
+  <p>
+  This is a simplified building model with:
+  </p>
+  <ul> 
+  <li> one heating load which temperature is computed with
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE</a> 
+  and the required heating heat flow rate is provided by a time series;
+  </li>
+  <li>
+  one additional heating load which temperature is prescribed with a time function 
+  and the required heating heat flow rate is also provided by a time function;
+  </li>
+  <li>
+  one cooling load which temperature is computed with
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE</a> 
+  and the required cooling heat flow rate is provided by a time series.
+  </li>
+  </ul>
+  <p>
+  </p>
+  </html>"),
+  Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
 end TimeSeriesBuilding;

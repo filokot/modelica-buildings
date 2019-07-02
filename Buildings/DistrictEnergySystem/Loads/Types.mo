@@ -4,11 +4,11 @@ package Types "Package with type definitions"
 
   type ModelType = enumeration(
       HeatPort
-             "Thermal model with heat port",
+      "Thermal model with heat port",
       ODE
-        "Temperature based on first order ODE",
+      "Temperature based on first order ODE",
       PrescribedT
-                "Prescribed temperature")
+      "Prescribed temperature")
     "Enumeration to define the type of load model"
   annotation(Documentation(info="<html>
     <p>

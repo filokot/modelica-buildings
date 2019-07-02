@@ -1,14 +1,14 @@
 within Buildings.DistrictEnergySystem.Loads.Examples;
-model CouplingGeojsonExport "Example illustrating the coupling of a RC building model to a fluid loop"
+model CouplingGeojsonExport
+  "Example illustrating the coupling of a multizone RC model to a fluid loop"
   import Buildings;
   extends Modelica.Icons.Example;
   package Medium = Buildings.Media.Water "Fluid in the pipes";
-  Buildings.BoundaryConditions.WeatherData.ReaderTMY3
-                                            weaDat(
+  Buildings.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
     calTSky=Buildings.BoundaryConditions.Types.SkyTemperatureCalculation.HorizontalRadiation,
     computeWetBulbTemperature=false,
     filNam=Modelica.Utilities.Files.loadResource(
-        "modelica://Buildings/Resources/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
+    "modelica://Buildings/Resources/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
     "Weather data reader"
     annotation (Placement(transformation(extent={{110,-30},{90,-10}})));
 
@@ -20,7 +20,8 @@ model CouplingGeojsonExport "Example illustrating the coupling of a RC building 
     T=couHea.T_a_nominal,
     nPorts=1,
     use_T_in=true)
-              "Supply for heating water"          annotation (Placement(
+    "Supply for heating water"
+    annotation (Placement(
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -30,8 +31,8 @@ model CouplingGeojsonExport "Example illustrating the coupling of a RC building 
     nPorts=1,
     p=300000,
     T=couHea.T_b_nominal)
-              "Sink for heating water"
-                                      annotation (Placement(transformation(
+    "Sink for heating water"
+    annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={100,30})));
@@ -40,7 +41,8 @@ model CouplingGeojsonExport "Example illustrating the coupling of a RC building 
     nPorts=1,
     p=300000,
     T=couCoo.T_b_nominal)
-              "Sink for chilled water" annotation (Placement(transformation(
+    "Sink for chilled water"
+    annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={100,-90})));
@@ -49,7 +51,9 @@ model CouplingGeojsonExport "Example illustrating the coupling of a RC building 
     redeclare package Medium = Medium,
     T=couCoo.T_a_nominal,
     nPorts=1,
-    use_T_in=true)        "Supply for chilled water" annotation (Placement(
+    use_T_in=true)
+   "Supply for chilled water"
+   annotation (Placement(
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -106,8 +110,20 @@ equation
     annotation (Line(points={{-79,-96},{-68,-96},{-68,-86},{-42,-86}}, color={0,0,127}));
   connect(couHea.heaPorLoa, bui.heaPorHea) annotation (Line(points={{10,20},{10,-23},{40,-23}}, color={191,0,0}));
   connect(couCoo.heaPorLoa, bui.heaPorCoo) annotation (Line(points={{10,-80},{10,-37},{40,-37}}, color={191,0,0}));
-  annotation (Diagram(
+  annotation (
+  Documentation(info="<html>
+  <p>
+  This example illustrates the use of 
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling</a>  
+  to transfer heat from a fluid stream to a simplified multizone RC model resulting 
+  from the translation of a GeoJSON model specified within Urbanopt UI, see  
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExportBuilding\">
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExportBuilding</a>    
+  </p>
+  </html>"),
+  Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-140},{140,80}})),
-    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRCMult2Loads.mos"
+    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingGeojsonExport.mos"
         "Simulate and plot"));
 end CouplingGeojsonExport;

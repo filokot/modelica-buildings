@@ -12,7 +12,7 @@ model CouplingRC "Example illustrating the coupling of a RC building model to a 
     "Weather data reader"
     annotation (Placement(transformation(extent={{110,-30},{90,-10}})));
 
-  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCOneElementBuilding bui
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding bui
     annotation (Placement(transformation(extent={{40,-40},{60,-20}})));
   Buildings.Fluid.Sources.MassFlowSource_T supHea(
     use_m_flow_in=true,
@@ -106,8 +106,20 @@ equation
     annotation (Line(points={{-79,-96},{-68,-96},{-68,-86},{-42,-86}}, color={0,0,127}));
   connect(couHea.heaPorLoa, bui.heaPorHea) annotation (Line(points={{10,20},{10,-23},{40,-23}}, color={191,0,0}));
   connect(couCoo.heaPorLoa, bui.heaPorCoo) annotation (Line(points={{10,-80},{10,-37},{40,-37}}, color={191,0,0}));
-  annotation (Diagram(
-        coordinateSystem(preserveAspectRatio=false, extent={{-100,-140},{140,80}})),
-    __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
-        "Simulate and plot"));
+  annotation (
+  Documentation(info="<html>
+  <p>
+  This example illustrates the use of 
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling</a>  
+  to transfer heat from a fluid stream to a simplified building model consisting in two heating loads and one cooling 
+  load as described in
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding\">
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.RCBuilding</a>    
+  </p>
+  </html>"),
+  Diagram(
+  coordinateSystem(preserveAspectRatio=false, extent={{-100,-140},{140,80}})),
+  __Dymola_Commands(file="Resources/Scripts/Dymola/DistrictEnergySystem/Loads/Examples/CouplingRC.mos"
+  "Simulate and plot"));
 end CouplingRC;

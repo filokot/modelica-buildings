@@ -1,13 +1,13 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model GeojsonExportBuilding "Building model of type RC based on Urbanopt Geojson export"
+model GeojsonExportBuilding "Building model of type RC based on Urbanopt GeoJSON export"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
     final heaLoaTyp=fill(Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort, nHeaLoa),
     final cooLoaTyp=fill(Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort, nCooLoa),
-    Q_flowHea_nominal=fill(50000, nHeaLoa),
-    Q_flowCoo_nominal=fill(50000, nCooLoa),
     final nHeaLoa=6,
-    final nCooLoa=6);
+    final nCooLoa=6,
+    Q_flowCoo_nominal={30000,5000,5000,5000,5000,20000},
+    Q_flowHea_nominal={15000,10000,5000,8000,5000,1000});
   Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.GeojsonExport.B5a6b99ec37f4de7f94020090_Office
     b5a6b99ec37f4de7f94020090_Office annotation (Placement(transformation(extent={{-100,-20},{-80,0}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant minTSet[nHeaLoa](k=fill(20, nHeaLoa))
@@ -107,7 +107,7 @@ equation
   connect(b5a6b99ec37f4de7f94020090_Storage.TAir, conPIDMinT[3].u_m)
     annotation (Line(points={{1,-10},{10,-10},{10,100},{-50,100},{-50,118}}, color={0,0,127}));
   connect(weaBus, b5a6b99ec37f4de7f94020090_Office.weaBus) annotation (Line(
-      points={{1,300},{1,169},{-100,169},{-100,-10}},
+      points={{1,300},{9,300},{9,20.3398},{-100,20.3398},{-100,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -115,7 +115,7 @@ equation
       extent={{-3,6},{-3,6}},
       horizontalAlignment=TextAlignment.Right));
   connect(weaBus, b5a6b99ec37f4de7f94020090_Floor.weaBus) annotation (Line(
-      points={{1,300},{-30,300},{-30,-12},{-60,-12},{-60,-10}},
+      points={{1,300},{10,300},{10,20},{-60,20},{-60,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -123,7 +123,7 @@ equation
       extent={{-3,-6},{-3,-6}},
       horizontalAlignment=TextAlignment.Right));
   connect(weaBus, b5a6b99ec37f4de7f94020090_Storage.weaBus) annotation (Line(
-      points={{1,300},{1,145},{-20,145},{-20,-10}},
+      points={{1,300},{11,300},{11,20},{-20,20},{-20,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -131,7 +131,7 @@ equation
       extent={{-3,6},{-3,6}},
       horizontalAlignment=TextAlignment.Right));
   connect(weaBus, b5a6b99ec37f4de7f94020090_Meeting.weaBus) annotation (Line(
-      points={{1,300},{10,300},{10,-10},{20,-10}},
+      points={{1,300},{10,300},{10,20},{20,20},{20,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -139,7 +139,7 @@ equation
       extent={{-6,3},{-6,3}},
       horizontalAlignment=TextAlignment.Right));
   connect(weaBus, b5a6b99ec37f4de7f94020090_Restroom.weaBus) annotation (Line(
-      points={{1,300},{1,145},{60,145},{60,-10}},
+      points={{1,300},{9,300},{9,19},{60,19},{60,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -147,13 +147,21 @@ equation
       extent={{-3,6},{-3,6}},
       horizontalAlignment=TextAlignment.Right));
   connect(weaBus, b5a6b99ec37f4de7f94020090_ICT.weaBus) annotation (Line(
-      points={{1,300},{50,300},{50,-10},{100,-10}},
+      points={{1,300},{10,300},{10,20},{100,20},{100,-10}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
       index=-1,
       extent={{-6,3},{-6,3}},
       horizontalAlignment=TextAlignment.Right));
-  annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
+  annotation (
+  Documentation(info="
+  <html>
+  <p>
+  This is a simplified multizone RC model resulting from the translation of a GeoJSON model specified 
+  within Urbanopt UI. It is composed of 6 thermal zones corresponding to the different load patterns.
+  </p>
+  </html>"),
+  Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
 end GeojsonExportBuilding;

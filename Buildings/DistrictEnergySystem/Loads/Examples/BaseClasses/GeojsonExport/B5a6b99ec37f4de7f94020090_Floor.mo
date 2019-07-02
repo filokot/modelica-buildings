@@ -107,7 +107,7 @@ model B5a6b99ec37f4de7f94020090_Floor
       extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic,
       tableName="Internals",
       fileName=Modelica.Utilities.Files.loadResource(
-          "modelica://Buildings/DistrictEnergySystem/Loads/Examples/BaseClasses/GeojsonExport/InternalGains_B5a6b99ec37f4de7f94020090Floor.mat"),
+          "modelica://Buildings/DistrictEnergySystem/Loads/Examples/Ressources/InternalGains_B5a6b99ec37f4de7f94020090Floor.mat"),
       columns={2,3,4})
       "Table with profiles for persons (radiative and convective) and machines (convective)"
       annotation (Placement(transformation(extent={{6,-60},{22,-44}})));

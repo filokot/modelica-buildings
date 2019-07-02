@@ -1,5 +1,5 @@
 within Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses;
-model RCOneElementBuilding "Building model of type RC one element"
+model RCBuilding "Building model of type RC one element"
   import Buildings;
   extends Buildings.DistrictEnergySystem.Loads.BaseClasses.PartialBuilding(
     final nCooLoa=1,
@@ -284,6 +284,28 @@ equation
   connect(gai1.y, Q_flowCooReq[1])
     annotation (Line(points={{1,-130},{152,-130},{152,-100},{310,-100}}, color={0,0,127}));
   connect(sin.y, Q_flowHeaReq[2]) annotation (Line(points={{11,180},{158,180},{158,105},{310,105}}, color={0,0,127}));
-  annotation (Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
+  annotation (
+  Documentation(info="<html>
+  <p>
+  This is a simplified building model with:
+  </p>
+  <ul> 
+  <li> one instance of 
+  <a href=\"modelica://Buildings.ThermalZones.ReducedOrder.RC.OneElement\">
+  Buildings.ThermalZones.ReducedOrder.RC.OneElement</a> providing the temperature of one cooling load and one 
+  heating load. The required cooling and heating heat flow rates to maintain the maximum and minimum 
+  temperature setpoints are computed by means of a PI controller; 
+  </li>
+  <li>
+  one additional heating load which temperature is computed with
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE</a> 
+  and the required heating heat flow rate is provided by a time function.
+  </li>
+  </ul>
+  <p>
+  </p>
+  </html>"),
+  Diagram(coordinateSystem(extent={{-300,-300},{300,300}})), Icon(
         coordinateSystem(extent={{-100,-100},{100,100}})));
-end RCOneElementBuilding;
+end RCBuilding;

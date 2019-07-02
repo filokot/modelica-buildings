@@ -14,26 +14,20 @@ partial model PartialBuilding "Partial class for building model"
     each displayUnit="degC") = fill(Modelica.SIunits.Conversions.from_degC(24), nCooLoa)
     "Temperature of cooling load at nominal conditions"
     annotation(Dialog(group = "Nominal condition"));
-
   parameter Integer nHeaLoa = 1
     "Number of heating loads";
-
   parameter Integer nCooLoa = 1
     "Number of cooling loads";
-
   parameter Buildings.DistrictEnergySystem.Loads.Types.ModelType heaLoaTyp[nHeaLoa]=
     fill(Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort, nHeaLoa)
     "Type of heating load model";
-
   parameter Buildings.DistrictEnergySystem.Loads.Types.ModelType cooLoaTyp[nCooLoa]=
     fill(Buildings.DistrictEnergySystem.Loads.Types.ModelType.HeatPort, nCooLoa)
     "Type of cooling load model";
-
   Buildings.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(
-    transformation(extent={{-16,284},{18,316}}), iconTransformation(extent={{
-            -16,84},{18,116}})));
-
+    transformation(extent={{-16,284},{18,316}}),
+    iconTransformation(extent={{-16,84},{18,116}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heaPorCoo[nCooLoa]
     "Heat port for heat transfer with the cooling source"       annotation (
       Placement(transformation(extent={{-310,-110},{-290,-90}}),
@@ -182,7 +176,60 @@ equation
     end for;
   end if;
 
-  annotation (Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},
-            {100,100}})),                                       Diagram(
-        coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},{300,300}})));
+  annotation (
+  defaultComponentName="heaFloEps",
+  Documentation(info="<html>
+  <p>
+  Partial model for connecting loads at uniform temperature with a hot water and a chilled water loop 
+  by means of two arrays of heat ports: one for heating, the other for cooling.
+  It is typically used in conjunction with 
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling</a>.
+  </p>
+  <p>
+  Models that extend from this model must:
+  </p>
+  <ul>
+  <li>
+  specify a method to compute the temperature of the load. The following predefined types are implemented:
+    <ul>
+    <li>
+    Thermal model with heat port: the derived model provides the systems of equation to compute the load 
+    temperature and exposes it through a heat port. This heat port must be connected to the heat ports of the 
+    partial model in order to transfer the sensible heat flow rate from the water loop to the load. 
+    See <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC\">
+    Buildings.DistrictEnergySystem.Loads.Examples.CouplingRC</a> for a typical example.   
+    </li>
+    <li>
+    Temperature based on first order ODE: this method is implemented in 
+    <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE\">
+    Buildings.DistrictEnergySystem.Loads.BaseClasses.FirstOrderODE</a> 
+    which gets conditionally instantiated and connected as many times as this predefined type is selected.
+    See <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.CouplingTimeSeries\">
+    Buildings.DistrictEnergySystem.Loads.Examples.CouplingTimeSeries</a> for a typical example.  
+    </li>
+    <li>
+    Prescribed temperature: this method uses  
+    <a href=\"modelica://Buildings.HeatTransfer.Sources.PrescribedTemperature\">
+    Buildings.HeatTransfer.Sources.PrescribedTemperature</a> 
+    which gets conditionally instantiated and connected as many times as this predefined type is selected.
+    See <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.CouplingTimeSeries\">
+    Buildings.DistrictEnergySystem.Loads.Examples.CouplingTimeSeries</a> for a typical example.  
+    </li>
+    </ul>
+  </li>
+  <li> 
+  provide the heating and cooling heat flow rate required for maintaining the load temperature setpoint. The
+  corresponding variables must be connected to the output connectors <code>Q_flowHeaReq</code> and 
+  <code>Q_flowCooReq</code>.
+  </li>
+  </ul>
+  <p>
+  The other output connectors <code>Q_flowHeaAct</code> and <code>Q_flowCooAct</code> correspond to the actual 
+  heat flow rates exchanged with the water loop. 
+  They are provided as a simple means of accessing the heat flow rate of each heat port from a higher level model. 
+  </p>
+  </html>"),
+  Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100}, {100,100}})),
+  Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},{300,300}})));
 end PartialBuilding;

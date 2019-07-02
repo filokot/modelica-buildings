@@ -1,9 +1,10 @@
 within Buildings.DistrictEnergySystem.Loads.BaseClasses;
 model HeatFlowEffectiveness
-  "Model for static heat transfer between a circulating fluid and a thermal load, based on effectiveness"
+  "Model for steady-state, sensible heat transfer between a circulating fluid and thermal loads, based on the effectiveness"
   extends Buildings.Fluid.Interfaces.StaticTwoPortHeatMassExchanger(
     final sensibleOnly=true,
     final prescribedHeatFlowRate=false,
+    final m_flow_nominal=sum(m_flowLoa_nominal),
     dp_nominal=0,
     Q_flow=sum(heaPor.Q_flow),
     mWat_flow=0,
@@ -38,7 +39,8 @@ model HeatFlowEffectiveness
         extent={{-20,-20},{20,20}},
         rotation=0,
         origin={-120,-80})));
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect effDir[nLoa]
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect effDir[nLoa](
+    final m_flow_nominal=m_flowLoa_nominal)
     annotation (Placement(transformation(extent={{-20,78},{0,98}})));
   Modelica.Blocks.Sources.RealExpression TInlVal[nLoa](y=fill(TInl, nLoa))
     "Fluid inlet temperature"
@@ -51,15 +53,15 @@ model HeatFlowEffectiveness
     annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
   Modelica.Blocks.Sources.RealExpression m_flowActVal[nLoa](y=m_flowAct) "Actual mass flow rate"
     annotation (Placement(transformation(extent={{-80,72},{-60,92}})));
-  // Parameters for inverseXRegularized.
-  // These are assigned here for efficiency reason.
-  // Otherwise, they would need to be computed each time
-  // the function is invocated.
-  Controls.OBC.CDL.Interfaces.RealOutput UAAct[nLoa](quantity="ThermalConductance")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput UAAct[nLoa](quantity="ThermalConductance")
     "Thermal conductance at actual flow rate"
     annotation (Placement(transformation(extent={{100,70},{120,90}}), iconTransformation(extent={{100,60},{120,80}})));
   Modelica.Blocks.Sources.RealExpression UAActVal[nLoa](y=UAAct) "Thermal conductance at actual flow rate"
     annotation (Placement(transformation(extent={{-80,86},{-60,106}})));
+  // Parameters for inverseXRegularized.
+  // These are assigned here for efficiency reason.
+  // Otherwise, they would need to be computed each time
+  // the function is invocated.
 protected
   final parameter Real deltaReg = m_flow_small/1E3
     "Smoothing region for inverseXRegularized";
@@ -119,11 +121,61 @@ equation
   connect(UAActVal.y, effDir.UA) annotation (Line(points={{-59,96},{-22,96}}, color={0,0,127}));
   annotation (
   defaultComponentName="heaFloEps",
+  Documentation(info="<html>
+  <p>
+  This model computes the steady-state, sensible heat transfer between a circulating fluid and 
+  idealized thermal loads at uniform temperature.
+  </p>
+  <p>
+  The heat flow rate transferred to each load <i>i</i> is computed based on the effectiveness method, 
+  see 
+  <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect\">
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.EffectivenessDirect</a>.
+  </p>  
+  <p>
+  The minimum capacity rate <i>C<sub>min, i</sub></i> is computed for each load based on the fluid inlet  
+  specific heat capacity (similar for all loads) and a mass flow rate equal to:
+  </p>
+  <p align=\"center\" style=\"font-style:italic;\">
+  m&#775;<sub>i</sub> = m&#775; * m&#775;<sub>input, i</sub> / &Sigma;<sub>i</sub> m&#775;<sub>input, i</sub>,
+  </p>
+  <p>
+  where 
+  <i>m&#775;</i> is the mass flow rate of the main fluid stream (at fluid port) and 
+  <i>m&#775;<sub>input, i</sub></i> is the mass flow rate provided as an input for each load.
+  </p>
+  <p>
+  <i><i>UA<sub>i</sub></i></i> is computed for each load using the following equations:
+  </p>
+  <p align=\"center\" style=\"font-style:italic;\">
+  1 / UA<sub>i</sub> = 1 / UA<sub>int, i</sub> + 1 / UA<sub>ext, i</sub>
+  </p>
+  <p align=\"center\" style=\"font-style:italic;\">
+  UA<sub>ext, i</sub> = UA<sub>ext, nom, i</sub>
+  </p>
+  <p align=\"center\" style=\"font-style:italic;\">
+  UA<sub>int, i</sub> = UA<sub>int, nom, i</sub> * (m&#775;<sub>i</sub> / 
+  m&#775;<sub>nom, i</sub>)<sup>expUAi</sup>.
+  </p>
+  <p>
+  The last equation providing the UA-value on the fluid side is derived from a forced convection 
+  correlation, expressing the Nusselt number as a power of the Reynolds number, under the assumption that the 
+  physical characteristics of the fluid do not vary significantly from their value at nominal conditions. The 
+  default value of <i>expUA<sub>i</sub></i> stems from the Dittus and Boelter correlation for turbulent 
+  flow.
+  </p>
+  <h4>References</h4>
+  <p>
+  Dittus and Boelter. 1930. Heat transfer in automobile radiators of the tubular type. University of California
+  Engineering Publication 13.443.
+  </p>
+  </html>"),
   Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           extent={{-100,80},{100,-80}},
           lineColor={0,0,0},
           pattern=LinePattern.None,
           fillColor={192,192,192},
-          fillPattern=FillPattern.Forward)}),                    Diagram(coordinateSystem(preserveAspectRatio=false)));
+          fillPattern=FillPattern.Forward)}),
+       Diagram(coordinateSystem(preserveAspectRatio=false)));
 end HeatFlowEffectiveness;
