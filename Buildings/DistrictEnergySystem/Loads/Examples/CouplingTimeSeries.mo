@@ -106,14 +106,14 @@ equation
     annotation (Line(points={{-79,-96},{-68,-96},{-68,-86},{-56,-86}}, color={0,0,127}));
   annotation (
   Documentation(info="<html>
-  <p>
-  This example illustrates the use of 
+   <p>
+  This example illustrates the use of
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling\">
-  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling</a>  
-  to transfer heat from a fluid stream to a simplified building model consisting in two heating loads and one cooling 
+  Buildings.DistrictEnergySystem.Loads.BaseClasses.HeatingOrCooling</a>
+  to transfer heat from a fluid stream to a simplified building model consisting in two heating loads and one cooling
   load as described in
   <a href=\"modelica://Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.TimeSeriesBuilding\">
-  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.TimeSeriesBuilding</a>.    
+  Buildings.DistrictEnergySystem.Loads.Examples.BaseClasses.TimeSeriesBuilding</a>.
   </p>
   </html>"),
   Diagram(
